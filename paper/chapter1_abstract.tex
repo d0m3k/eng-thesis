@@ -1,16 +1,33 @@
 \chapter{Wprowadzenie}
 \label{cha:wprowadzenie}
 
-Dzisiejsza informatyka jak nigdy stoi przed wyzwaniami związanymi z wydajnością, 
-których nie może rozwiązywać tylko poprzez skalowanie wertykalne -- próbę zwiększania wydajności pojedyńczych węzłów. W natłoku zapytań poradzić sobie można dzięki łatwości skalowania horyzontalnego -- możliwości rozszerzania {\em floty} urządzeń, co wymaga odpowiedniego sposobu projektowania, od sprzętu, przez protokoły, na samej architekturze systemów informatycznych kończąc.
-% Czy to na pewno dobry wstęp do wstępu? Jeśli nie, pójdziemy w ten temat w następnym rozdziale, ale zobaczymy.
+Dzisiejsza informatyka jak nigdy stoi przed wyzwaniami związanymi z wydajnością, wymuszanymi poprzez miliony klientów z szerokopasmowym dostępem do sieci. Ich rozwiązywanie nie jest już możliwe przez wzmacnianie podzespołów pojedyńczych komputerów -- wymaga odpowiedniego sposobu projektowania, który skupia się na możliwościach maksymalnego rozłożenia i łatwego skalowania obciążenia. Ta praca proponuje rozwiązanie, które wpisuje się w ten motyw i w przystępny klientom sposób może znacznie odciążyć rozwijające się części sieci web.
+
+\section{Cele pracy}
+\label{sec:celePracy}
+
+% TODO - tę sekcję prawdopodobnie trzeba przepisać, uwzględniając efekty pracy w dalszym ciągu tekstu + fakt że bardzo bardzo rozpisuję sie nad tym co zastępujemy
+
+Celem tej pracy jest stworzenie protokołu i oprogramowania pozwalającego na rozproszony i bezpieczny dostęp do współdzielonych zasobów, w warstwie użytkowej odpowiadającego obecnemu Hypertext Transfer Protocol (HTTP). W toku pracy, system określany będzie skrótem \textbf{dHTTP} -- distributed HTTP.
+
+% prawdopodobnie trzeba to wynieść do któregoś z kolejnych rozdziałów, bo już jest zbyt granuralne
+
+Głównym założeniem projektu jest odciążenie stron, które nagle stają się popularne -- często opcją dla właścicieli takich stron jest inwestycja w szybsze łącza czy więcej sprzętu, wiążąca się ze sporymi kosztami. Kosztami które mogą zresztą nie znaleźć uzasadnienia -- dodatkowy sprzęt pomoże w chwilach szczytowego ruchu, będzie jednak przez większość czasu leżeć odłogiem, wciąz jednak generując koszty łącz i prądu.
+
+Częściowym rozwiązaniem tego problemu są chmury i udostępniany przez nie {\em autoscaling} -- użytkownicy, zamiast utrzymywać własną infrastrukturę, mogą nie tylko zdać się na serwery zarządzane przez zewnętrzny podmiot, ale także wykorzystać mechanizmy automatycznego rozszerzania i zmniejszania ilości urządzeń czy wykorzystywanego łącza, w zależności od obciążenia całego klastra. To pozwala na drastyczną minimalizację kosztów i jest rozwiązaniem coraz chętniej stosowanym także przez podmioty o gigantycznym ruchu sieciowym, jak serwis streamingowy Netflix (\cite{AWSAs}).
+
+Wciąż jednak są to rozwiązania obciążające właściciela serwera, co może stanowić problem w przypadku projektów hobbystycznych czy krajów rozwijających się -- koszt autoscalingu może przecież okazać się nieproporcjonalnie wysoki w stosunku do czasów spokojnego ruchu.
+
+% poprzedni komentarz kończy się TU
+
+System zaprezentowany w poniższej pracy -- dHTTP -- ma posłużyć jako samoskalująca się, rozproszona alternatywa do tego podejścia. Musi wziąć on pod uwagę optymalne rozłożenie danych, zabezpieczenie przed zmienianiem zawartości zasobów przez niepowołane podmioty (hashe i podpisy kryptograficzne), szybki i możliwie najmniej scentralizowany sposób współdzielenia informacji o stanie systemu ({\em kto jest online i może dać mi plik \texttt{logo.png} z hosta \texttt{example.com}?}) i aktualizacjach zawartości oraz stronę kliencką, będącą w tym przypadku wtyczką do przeglądarki Google Chrome, nakładającą warstwę dHTTP na polecenia pobierania zasobów. Z punktu widzenia użytkownika system jest {\em przezroczysty}: zostanie  węzłem i klientem sieci dHTTP będzie polegało wyłącznie na instalacji wtyczki, działającej autonomicznie w tle.
 
 \section{Zawartość}
 \label{sec:zawartosc}
 
 Rozdział 1. stanowi krótkie wprowadzenie i definicję celu pracy. 
 
-Rozdział 2. zawiera rozważania na temat teoretycznych podstaw systemów rozproszonych, historię ich implementacji, oraz przykłady najpopularniejszych narzędzi je wykorzystujących. Wprowadza także do teoretycznych i narzędziowych podstaw implementacji systemu dHTTP. 
+Rozdział 2. zawiera rozważania na temat historycznych i teoretycznych podstaw systemów rozproszonych, oraz przykłady najpopularniejszych narzędzi je implementujących. Wprowadza także do teoretycznych i narzędziowych podstaw implementacji systemu dHTTP. 
 
 Rozdział 3. jest szczegółówym opisem wymagań, projektu, modułów, a także implementacji samego systemu, w szczegółach omawiającym funkcjonalności, biblioteki i narzędzia pozwalające na działanie aplikacji, napotkane w toku projektowania problemy i ich rozwiązania, rys architektoniczny sposobu przechowywania danych czy ich propagacji, w rozróżnieniu podejścia węzłowego i podejścia klienta końcowego.
 
@@ -18,20 +35,3 @@ Rozdział 4. to próba walidacji systemu dHTTP – analiza użytkowości systemu
 
 Rozdział 5. zawiera krótkie podsumowanie, podkreślające osiągnięte cele i potencjalne kierunki dalszego rozwoju projektu.
 
-\section{Cele pracy}
-\label{sec:celePracy}
-
-% TODO - tę sekcję prawdopodobnie trzeba przepisać, uwzględniając efekty pracy w dalszym ciągu tekstu + fakt że bardzo bardzo rozpisuję sie nad tym co zastępujemy
-
-Celem tej pracy jest stworzenie protokołu i oprogramowania pozwalającego na rozproszony i bezpieczny dostęp do współdzielonych zasobów, w warstwie użytkowej odpowiadającego obecnemu Hypertext Transfer Protocol (HTTP). W toku pracy, projekt określany będzie skrótem \textbf{dHTTP} -- distributed HTTP.
-% Co właściwie oznacza "przezroczysty"?
-
-Głównym założeniem projektu jest odciążenie stron, które nagle stają się popularne -- często opcją dla właścicieli takich stron jest inwestycja w szybsze łącza czy więcej sprzętu, wiążąca się ze sporymi kosztami. Kosztami które mogą zresztą nie znaleźć uzasadnienia -- dodatkowy sprzęt pomoże w chwilach szczytowego ruchu, będzie jednak przez większość czasu leżeć odłogiem, wciąz jednak generując koszty łącz i prądu.
-
-% prawdopodobnie trzeba to wynieść do któregoś z kolejnych rozdziałów, bo już jest zbyt granuralne
-
-Częściowym rozwiązaniem tego problemu są chmury i udostępniany przez nie {\em autoscaling} -- użytkownicy, zamiast utrzymywać własną infrastrukturę, mogą nie tylko zdać się na serwery zarządzane przez zewnętrzny podmiot, ale także wykorzystać mechanizmy automatycznego rozszerzania i zmniejszania ilości urządzeń czy wykorzystywanego łącza, w zależności od obciążenia całego klastra. To pozwala na drastyczną minimalizację kosztów i jest rozwiązaniem coraz chętniej stosowanym także przez podmioty o gigantycznym ruchu sieciowym, jak serwis streamingowy Netflix (\cite{AWSAs}).
-
-Wciąż jednak są to rozwiązania obciążające właściciela serwera, co może stanowić problem w przypadku projektów hobbystycznych czy krajów rozwijających się -- koszt autoscalingu może przecież okazać się nieproporcjonalnie wysoki w stosunku do czasów spokojnego ruchu.
-
-System zaprezentowany w poniższej pracy -- dHTTP -- ma posłużyć jako samoskalująca się, rozproszona alternatywa do tego podejścia. Musi wziąć on pod uwagę optymalne rozłożenie danych, zabezpieczenie przed zmienianiem zawartości zasobów przez niepowołane podmioty (hashe i podpisy kryptograficzne), szybki i możliwie najmniej scentralizowany sposób współdzielenia informacji o stanie systemu ({\em kto jest online i może dać mi plik xyz z hosta example.com?}) i aktualizacjach zawartości oraz stronę kliencką, będącą w tym przypadku wtyczką do przeglądarki Google Chrome, nakładającą warstwę dHTTP na polecenia pobierania zasobów. Z punktu widzenia użytkownika system jest {\em przezroczysty}: zostanie  węzłem i klientem sieci dHTTP będzie polegało wyłącznie na instalacji wtyczki, która działać będzie w tle.
