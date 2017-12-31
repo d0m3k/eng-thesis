@@ -1,10 +1,36 @@
 \chapter{Wprowadzenie}
 \label{cha:wprowadzenie}
 
-Dzisiejsza informatyka jak nigdy stoi przed wyzwaniami związanymi z wydajnością itd. itd.
+Dzisiejsza informatyka jak nigdy stoi przed wyzwaniami związanymi z wydajnością, 
+których nie może rozwiązywać tylko poprzez skalowanie wertykalne -- próbę zwiększania wydajności pojedyńczych węzłów. W natłoku zapytań poradzić sobie można dzięki łatwości skalowania horyzontalnego -- możliwości rozszerzania {\em floty} urządzeń, co wymaga odpowiedniego sposobu projektowania, od sprzętu, przez protokoły, na samej architekturze systemów informatycznych kończąc.
+% Czy to na pewno dobry wstęp do wstępu? Jeśli nie, pójdziemy w ten temat w następnym rozdziale, ale zobaczymy.
 
 \section{Zawartość}
 \label{sec:zawartosc}
 
+Rozdział 1. stanowi krótkie wprowadzenie i definicję celu pracy. 
+
+Rozdział 2. zawiera rozważania na temat teoretycznych podstaw systemów rozproszonych, historię ich implementacji, oraz przykłady najpopularniejszych narzędzi je wykorzystujących. Wprowadza także do teoretycznych i narzędziowych podstaw implementacji systemu dHTTP. 
+
+Rozdział 3. jest szczegółówym opisem wymagań, projektu, modułów, a także implementacji samego systemu, w szczegółach omawiającym funkcjonalności, biblioteki i narzędzia pozwalające na działanie aplikacji, napotkane w toku projektowania problemy i ich rozwiązania, rys architektoniczny sposobu przechowywania danych czy ich propagacji, w rozróżnieniu podejścia węzłowego i podejścia klienta końcowego.
+
+Rozdział 4. to próba walidacji systemu dHTTP – analiza użytkowości systemu pod kątem wrażeń użytkowych, zbiór badań nad wydajnością systemu (z uwzględnieniem różnych mechanizmów propagacji danych) i propozycji na jej dalsze optymalizacje.
+
+Rozdział 5. zawiera krótkie podsumowanie, podkreślające osiągnięte cele i potencjalne kierunki dalszego rozwoju projektu.
+
 \section{Cele pracy}
 \label{sec:celePracy}
+
+Celem tej pracy jest stworzenie protokołu i oprogramowania pozwalającego na rozproszony i bezpieczny dostęp do współdzielonych zasobów, w warstwie użytkowej odpowiadającego obecnemu Hypertext Transfer Protocol (HTTP), {\em przezroczystego} dla użytkownika końcowego. W toku pracy, projekt określany będzie skrótem \textbf{dHTTP} -- distributed HTTP.
+% Co właściwie oznacza "przezroczysty"?
+
+Głównym założeniem projektu jest odciążenie stron, które nagle stają się popularne -- często opcją dla właścicieli takich stron jest inwestycja w szybsze łącza czy więcej sprzętu, wiążąca się ze sporymi kosztami. Kosztami które mogą zresztą nie znaleźć uzasadnienia -- dodatkowy sprzęt pomoże w chwilach szczytowego ruchu, będzie jednak przez większość czasu leżeć odłogiem, wciąz jednak generując koszty łącz i prądu.
+
+% prawdopodobnie trzeba to wynieść do któregoś z kolejnych rozdziałów, bo już jest zbyt granuralne
+
+Częściowym rozwiązaniem tego problemu są chmury i udostępniany przez nie {\em autoscaling} -- użytkownicy, zamiast utrzymywać własną infrastrukturę, mogą nie tylko zdać się na serwery zarządzane przez zewnętrzny podmiot, ale także wykorzystać mechanizmy automatycznego rozszerzania i zmniejszania ilości urządzeń czy wykorzystywanego łącza, w zależności od obciążenia całego klastra. To pozwala na drastyczną minimalizację kosztów i jest rozwiązaniem coraz chętniej stosowanym także przez podmioty o gigantycznym ruchu sieciowym, jak serwis streamingowy Netflix.
+% TODO zacytuj https://aws.amazon.com/autoscaling/
+
+Wciąż jednak są to rozwiązania obciążające właściciela serwera, co może stanowić problem w przypadku projektów hobbystycznych czy krajów rozwijających się -- koszt autoscalingu może przecież okazać się nieproporcjonalnie wysoki w stosunku do czasów spokojnego ruchu.
+
+System zaprezentowany w poniższej pracy -- dHTTP -- ma posłużyć jako samoskalująca się, rozproszona alternatywa do tego podejścia. Musi wziąć on pod uwagę optymalne rozłożenie danych (obecny koncept polega na współdzieleniu zasobów już odwiedzonych przez użytkownika), zabezpieczenie przed zmienianiem zawartości zasobów przez niepowołane podmioty (hashe i podpisy kryptograficzne), szybki i możliwie najmniej scentralizowany sposób współdzielenia informacji o stanie systemu (jak „kto jest online i może dać mi plik xyz z hosta example.com?”) i aktualizacjach zawartości oraz stronę kliencką (implementacja prostej przeglądarki korzystającej z HTTP(s) i ww. protokołu jako „dokładki”, wykorzystującej metody NAT traversal dla peerów za maskaradą). 
