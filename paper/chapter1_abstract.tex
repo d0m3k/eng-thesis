@@ -1,7 +1,7 @@
 \chapter{Wprowadzenie}
 \label{cha:wprowadzenie}
 
-Dzisiejsza informatyka jak nigdy stoi przed wyzwaniami związanymi z wydajnością, wymuszanymi poprzez miliony klientów z szerokopasmowym dostępem do sieci. Ich rozwiązywanie nie jest już możliwe przez wzmacnianie podzespołów pojedyńczych komputerów -- wymaga odpowiedniego sposobu projektowania, który skupia się na możliwościach maksymalnego rozłożenia i łatwego skalowania obciążenia. Ta praca proponuje rozwiązanie, które wpisuje się w ten motyw i w przystępny klientom sposób może znacznie odciążyć rozwijające się części sieci web.
+Dzisiejsza informatyka jak nigdy stoi przed wyzwaniami związanymi z wydajnością, wymuszanymi poprzez miliony klientów z szerokopasmowym dostępem do sieci. Ich rozwiązywanie nie jest już możliwe przez wzmacnianie podzespołów pojedynczych komputerów -- wymaga odpowiedniego sposobu projektowania, który skupia się na możliwościach maksymalnego rozłożenia i łatwego skalowania obciążenia. Ta praca proponuje rozwiązanie, które wpisuje się w ten motyw i w przystępny klientom sposób może znacznie odciążyć rozwijające się części sieci web.
 
 \section{Cele pracy}
 \label{sec:celePracy}
@@ -12,7 +12,7 @@ Celem tej pracy jest stworzenie protokołu i oprogramowania pozwalającego na ro
 
 % prawdopodobnie trzeba to wynieść do któregoś z kolejnych rozdziałów, bo już jest zbyt granuralne
 
-Głównym założeniem projektu jest odciążenie stron, które nagle stają się popularne -- często opcją dla właścicieli takich stron jest inwestycja w szybsze łącza czy więcej sprzętu, wiążąca się ze sporymi kosztami. Kosztami które mogą zresztą nie znaleźć uzasadnienia -- dodatkowy sprzęt pomoże w chwilach szczytowego ruchu, będzie jednak przez większość czasu leżeć odłogiem, wciąz jednak generując koszty łącz i prądu.
+Głównym założeniem projektu jest odciążenie stron, które nagle stają się popularne -- często opcją dla właścicieli takich stron jest inwestycja w szybsze łącza czy więcej sprzętu, wiążąca się ze sporymi kosztami. Kosztami które mogą zresztą nie znaleźć uzasadnienia -- dodatkowy sprzęt pomoże w chwilach szczytowego ruchu, będzie jednak przez większość czasu leżeć odłogiem, wciąż jednak generując koszty łącz i prądu.
 
 Częściowym rozwiązaniem tego problemu są chmury i udostępniany przez nie {\em autoscaling} -- użytkownicy, zamiast utrzymywać własną infrastrukturę, mogą nie tylko zdać się na serwery zarządzane przez zewnętrzny podmiot, ale także wykorzystać mechanizmy automatycznego rozszerzania i zmniejszania ilości urządzeń czy wykorzystywanego łącza, w zależności od obciążenia całego klastra. To pozwala na drastyczną minimalizację kosztów i jest rozwiązaniem coraz chętniej stosowanym także przez podmioty o gigantycznym ruchu sieciowym, jak serwis streamingowy Netflix (\cite{AWSAs}).
 
@@ -29,7 +29,7 @@ Rozdział 1. stanowi krótkie wprowadzenie i definicję celu pracy.
 
 Rozdział 2. zawiera rozważania na temat historycznych i teoretycznych podstaw systemów rozproszonych, oraz przykłady najpopularniejszych narzędzi je implementujących. Wprowadza także do teoretycznych i narzędziowych podstaw implementacji systemu dHTTP. 
 
-Rozdział 3. jest szczegółówym opisem wymagań, projektu, modułów, a także implementacji samego systemu, w szczegółach omawiającym funkcjonalności, biblioteki i narzędzia pozwalające na działanie aplikacji, napotkane w toku projektowania problemy i ich rozwiązania, rys architektoniczny sposobu przechowywania danych czy ich propagacji, w rozróżnieniu podejścia węzłowego i podejścia klienta końcowego.
+Rozdział 3. jest szczegółowym opisem wymagań, projektu, modułów, a także implementacji samego systemu, w szczegółach omawiającym funkcjonalności, biblioteki i narzędzia pozwalające na działanie aplikacji, napotkane w toku projektowania problemy i ich rozwiązania, rys architektoniczny sposobu przechowywania danych czy ich propagacji, w rozróżnieniu podejścia węzłowego i podejścia klienta końcowego.
 
 Rozdział 4. to próba walidacji systemu dHTTP – analiza użytkowości systemu pod kątem wrażeń użytkowych, zbiór badań nad wydajnością systemu (z uwzględnieniem różnych mechanizmów propagacji danych) i propozycji na jej dalsze optymalizacje.
 
