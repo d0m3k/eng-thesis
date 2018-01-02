@@ -12,7 +12,10 @@ Autorzy IPFS zauważają w swojej pracy (\cite{ipfsWP}) także inne słabości o
 
 \section{Zarys historyczny}
 \label{sec:teoriaRozproszenia}
-W świecie informatyki szybko wyewoluowały rozwiązania określane jako współbieżne. Istnienie wielu wątków 
+W świecie informatyki szybko wyewoluowały rozwiązania określane jako współbieżne. Istnienie wielu wątków -- niezależnych od siebie logicznie toków wywołań, operujących na wspólnej pamięci -- i ich przeplot rozwiązywał takie problemy, jak nierówny rozmiar żądań -- działający sekwencyjnie serwer blokowałby się przy poleceniach zajmujących więcej czasu. Dzięki przeplataniu wątków można uniknąć tej sytuacji, a także pozwolić na iluzję symultaniczności -- mimo korzystania z jednego procesora, polecenia wykonywane są {\em pseudorównolegle}, co pozwala między innymi na responsywność interfejsów użytkownika.
+
+Upowszechnienie się komputerów wieloprocesorowych i procesorów wielordzeniowych zaowocowało rozwojem obliczeń równoległych. Istotne jest rozgraniczenie tych dwóch pojęć -- współbieżność jest raczej paradygmatem, sposobem strukturyzacji oprogramowania w sposób, który pozwala na wykonywanie wielu poleceń niezależnie i jednocześnie; równoległość z kolei to możliwość uruchamiania tego typu oprogramowania w tym samym czasie, dzięki mnogiej liczbie procesorów (\cite{concurrencyGo}).
+
 
 i zdecentralizowane, w niedługim czasie stanowiące podstawę dla rozwiązań rozproszonych.
 
@@ -21,3 +24,4 @@ i zdecentralizowane, w niedługim czasie stanowiące podstawę dla rozwiązań r
 
 \section{Podstawa projektu}
 \label{sec:podstawaProjektu}
+`'
