@@ -20,14 +20,14 @@ Wciąż jednak są to rozwiązania obciążające właściciela serwera, co moż
 
 % poprzedni komentarz kończy się TU
 
-System zaprezentowany w poniższej pracy -- dHTTP -- ma posłużyć jako samoskalująca się, rozproszona alternatywa do tego podejścia. Musi wziąć on pod uwagę optymalne rozłożenie danych, zabezpieczenie przed zmienianiem zawartości zasobów przez niepowołane podmioty (hashe i podpisy kryptograficzne), szybki i możliwie najmniej scentralizowany sposób współdzielenia informacji o stanie systemu ({\em kto jest online i może dać mi plik \texttt{logo.png} z hosta \texttt{example.com}?}) i aktualizacjach zawartości oraz stronę kliencką, będącą w tym przypadku wtyczką do przeglądarki Google Chrome, nakładającą warstwę dHTTP na polecenia pobierania zasobów. Z punktu widzenia użytkownika system jest {\em przezroczysty}: zostanie  węzłem i klientem sieci dHTTP będzie polegało wyłącznie na instalacji wtyczki, działającej autonomicznie w tle. Oprócz aplikacji klienckiej, dHTTP udostępniony zostanie także w trybie {\em headless} -- węzeł uruchamiający może zostać częścią klastra bez użycia przeglądarki.
+System zaprezentowany w poniższej pracy -- dHTTP -- ma posłużyć jako samoskalująca się, rozproszona alternatywa do tego podejścia. Musi wziąć on pod uwagę optymalne rozłożenie danych, zabezpieczenie przed zmienianiem zawartości zasobów przez niepowołane podmioty (hashe i podpisy kryptograficzne), szybki i możliwie najmniej scentralizowany sposób współdzielenia informacji o stanie systemu ({\em kto jest online i może dać mi plik \texttt{logo.png} z hosta \texttt{example.com}?}) i aktualizacjach zawartości oraz stronę kliencką, będącą w tym przypadku wtyczką do przeglądarki Google Chrome, nakładającą warstwę dHTTP na polecenia pobierania zasobów. Z punktu widzenia użytkownika system jest {\em przezroczysty}: zostanie  węzłem i klientem sieci dHTTP polega wyłącznie na instalacji wtyczki, działającej autonomicznie w tle. Oprócz aplikacji klienckiej, dHTTP udostępniony jest także w trybie {\em headless} -- węzeł uruchamiający może zostać częścią klastra bez użycia przeglądarki.
 
 \section{Zawartość}
 \label{sec:zawartosc}
 
 Rozdział 1. stanowi krótkie wprowadzenie i definicję celu pracy. 
 
-Rozdział 2. zawiera rozważania na temat historycznych i teoretycznych podstaw systemów rozproszonych, oraz przykłady najpopularniejszych narzędzi je implementujących. Wprowadza także do teoretycznych i narzędziowych podstaw implementacji systemu dHTTP. 
+Rozdział 2. zawiera rozważania na temat historycznych i teoretycznych podstaw systemów rozproszonych, oraz przykłady najpopularniejszych narzędzi je implementujących. Wprowadza także do konceptualnych i narzędziowych podstaw implementacji systemu dHTTP. 
 
 Rozdział 3. jest szczegółowym opisem wymagań, projektu, modułów, a także implementacji samego systemu, w szczegółach omawiającym funkcjonalności, biblioteki i narzędzia pozwalające na działanie aplikacji, napotkane w toku projektowania problemy i ich rozwiązania, rys architektoniczny sposobu przechowywania danych czy ich propagacji, w rozróżnieniu podejścia węzłowego i podejścia klienta końcowego.
 

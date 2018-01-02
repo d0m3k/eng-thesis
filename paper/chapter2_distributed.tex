@@ -8,7 +8,7 @@ Problem posiada także drugą stronę -- nie wszyscy użytkownicy internetu mog�
 
 Autorzy IPFS zauważają w swojej pracy (\cite{ipfsWP}) także inne słabości obecnego internetu – sieć oparta o HTTP jest w prawdzie zdecentralizowana, jako iż treści rozdzielane są pomiędzy miliony węzłów, od gigantycznej sieci Amazon Web Services aż po mikroserwery stojące w domach pasjonatów; brakuje jej jednak faktycznego rozproszenia: ta infrastruktura nie jest gotowa {\em by design} na przyjmowanie gigantycznego ruchu, nie jest w stanie efektywnie przechowywać i udostępniać wielkich zestawów danych; jest również podatna na znikanie danych, jako iż awaria pojedynczego dysku twardego może zatrzymać udostępnianie całej witryny. 
 
-% TODO - Tu trzeba dopisać jakieś przełamanie w kolejną sekcję. Co też o innych systemach rozproszonych?
+% TODO - Tu trzeba dopisać jakieś przełamanie w kolejną sekcję. Co też o innych systemach rozproszonych? I jaki związek mają powyższe problemy z tym co robię?
 
 \section{Zarys historyczny}
 \label{sec:teoriaRozproszenia}
@@ -25,7 +25,7 @@ Remedium dla powyższych problemów jest próba rozdzielenia pracy pomiędzy wie
 % TODO - rozwinąć powyższy akapit; wspomnieć choćby o Erlangu, paradygmatach funkcyjnych, unikaniu mutowalności, COW etc.
 
 
-% TODO -- rozbij trochę to pisanie o obliczeniach rozproszonych -- tutaj tak naprawdę definiujesz coś pomiedzy klastrem a peer-to-peer, więc tego.
+% TODO -- rozbij trochę to pisanie o obliczeniach rozproszonych -- tutaj tak naprawdę definiujesz coś pomiedzy klastrem a peer-to-peer, więc tego. Więcej rozproszenia
 Obliczenia decentralizowane uznać można za podklasę \textbf{obliczeń rozproszonych}. Dla potrzeb tej pracy, obliczenia rozproszone zdefiniowane zostaną jako prowadzone przez w pełni autonomiczne węzły, które dzielą między sobą pracę i radzą sobie z pojawianiem się i znikaniem kolejnych elementów sieci; innymi słowy, w warstwie logicznej system równoległy powinien zachowywać się identycznie zarówno przy istnieniu zaledwie jednego węzła sieci, jak i przy milionie -- różnicą powinien być wyłącznie spadek wydajności systemu.
 % czy to nie jest klaster, albo peer-to-peer? To jest klaster, TODO -- przepisać na definicję rozproszenia, a z tego zrobić definicję klastra, i chcemy żeby to co robimy było klastrem.
 
@@ -60,15 +60,25 @@ Obliczenia decentralizowane uznać można za podklasę \textbf{obliczeń rozpros
 \label{sec:narzedzia}
 Najbardziej istotnym problemem z dziedziny rozproszenia dla systemu dHTTP jest rozproszenie danych -- próba propagowania informacji pomiędzy wiele węzłów sieci, w celach takich jak podniesienie wydajności, obniżenie kosztów, zwiększenie dostępności czy zapewnienie trwałości informacji.
 
-% git
-
+Dobrym przykładem rozwiązania rozproszonego w operacjach na danych jest system kontroli wersji \texttt{git}.
+Został stworzony przez Linusa Torvaldsa, autora jądra Linux, jako otwarta alternatywa dla systemu BitKeeper, który wycofał z dystrybucji darmową wersję swojej aplikacji projektom open source.
+\texttt{git} jest projektem czysto rozproszonym -- każdy użytkownik posiada kompletną kopię repozytorium, z informacjami o wszystkich zmianach i ich autorach, na której może wykonywać operacje w trybie offline; nie jest uzależniony od istnienia centralnego serwera (choć jego stosowanie jest powszechne; każdy użytkownik o aktualnej wersji repozytorium mógłby jednak pełnić jego rolę), a zmiany mogą być propagowane na różne sposoby, takie jak email czy przekazywanie łat w formie tekstowej. Dzięki swojej wydajności i silne zdecentralizowanemu designowi, \texttt{git} jest chętnie wybieranym rozwiązaniem nie tylko w środowiskach programistów, a w środowiskach profesjonalnych wypiera konkurencyjne rozwiązania, takie jak Apache Subversion czy CVS (\cite{ram2013git}).
+% TODO - lekko o funkcyjności gita.
 
 Nie zawsze jednak motywacje stojące za wyciąganiem danych z centralnych serwerów były szczytne. Duży wpływ na rozwój technik stosowanych obecnie -- w tym wykorzystywanych przez dHTTP -- mają rozwiązania rozpowszechnione głównie przez piractwo komputerowe. Rozwiązania peer-to-peer -- polegające na współpracy równorzędnych węzłów -- zostały spopularyzowane dzięki aplikacji Napster, która w roku 2001 zgromadziła około 80 milionów użytkowników. Zaprojektowana jako system współdzielenia plików, wyspecjalizowała się w łatwym udostępnianiu plików MP3, z reguły nieleganie. Napster wzburzył wiele kontrowersji -- w systemie pojawiały się niewydane jeszcze utwory znanych artystów, prowadząc do milionowych strat i procesu, który pogrążył działanie systemu.
 Problemem Napstera była architektura oparta o centralny serwer indeksujący -- każdy podpięty węzeł informował o posiadanych przez siebie plikach, a punkt centralny był niezbędny do przeszukiwania bazy plików i przekazywania poleceń pobrania innym węzłom. To rozwiązanie było niebezpieczne, i pozwoliło obciążyć twórców programu odpowiedzialnością za szerzone w nim treści.
 
-Błędy Napstera zostały zauważone przy kolejnych projektach tego typu. Gnutella, chcąc uniknąć istnienia {\em single point of failure}, rozgłaszała polecenia do wszystkich maszyn w sieci, co owocowało drastycznym spadkiem wydajności.
+Błędy Napstera zostały zauważone przy kolejnych projektach tego typu. Gnutella, chcąc uniknąć istnienia {\em single point of failure}, rozgłaszała polecenia do wszystkich maszyn w sieci, co owocowało drastycznym spadkiem wydajności (\cite{measuringNapsterGnutella}).
 
-Chcąc pogodzić kwestie bezpieczeństwa i wydajności systemu, rozpoczęte zostały intensywne prace nad 
+Alternatywne podejście podjęte zostało przez sieć Freenet, gdzie zastosowano heurystyczny routing oparty o klucze; każdy plik otrzymuje klucz, podobne klucze lądowały na zbliżonych do siebie węzłach, dzięki czemu przeszukiwanie sieci nie wymagało punktu centralnego, a polecenia kierowane były w sposób nie wymagający wielu przeskoków. Niestety, ta metoda nie gwarantowała znalezienia danych (\cite{searchingInSmallWorld}).
+
+Chcąc pogodzić kwestie bezpieczeństwa, wydajności i spójności systemu, rozpoczęte zostały intensywne prace nad rozproszonymi tablicami haszującymi (distributed hash table -- \textbf{DHT}).
+ % TODO - więcej o DHT, i koniecznie coś o BitTorrencie, który stanowi sporą część kanwy dla IPFSa.
 
 \section{Podstawa projektu}
 \label{sec:podstawaProjektu}
+Wspomniane rozwiązania stanowią kanwę dla projektu IPFS -- InterPlanetary File System -- którego celem jest spięcie wszystkich komputerów wspólnym systemem plików. Jak twierdzą sami autorzy, {\em IPFS przypomina sieć Web, ale też wielki klaster BitTorrent, wymieniający obiekty w jednym repozytorium \texttt{git}a}. IPFS jest połączeniem DHT, wymiany danych w stylu sieci BitTorrent,
+% napisz więcej o blokach i nagrodach
+nie posiada {\em single point of failure} i nie wymaga od węzłów wzajemnego zaufania (\cite{ipfsWP}).
+
+IPFS posiada wzorcową implementację w języku Go, i jest podstawą stosu sieciowego \texttt{libp2p}. Zbiór bibliotek udostępniony w projekcie \texttt{js-libp2p} stanowi fundament projektu dHTTP, który, dzięki natywnej implementacji w JavaScripcie, może być w pełni uruchamialny z poziomu przeglądarki, oferując użytkową przezroczystość odbiorcy.
