@@ -19,6 +19,7 @@ Upowszechnienie się komputerów wieloprocesorowych i procesorów wielordzeniowy
 Współbieżność i równoległość rozwiązują problemy obciążenia, ułatwiając operacje na współdzielonej pamięci. Istnieją całe klasy algorytmów naturalnie podatnych zrównoleglaniu: mapowanie, grupowanie, przeszukiwanie czy sortowanie są jednymi z przykładów. Choć w niektórych przypadkach adaptacja algorytmu wymaga jego konkretnej modyfikacji, możliwość rozwiązywania składowych problemu jako niezależnych wątków znacznie przyspiesza wykonanie w środowiskach wieloprocesorowych (\cite{parallelAlgo}).
 % in English, to są embarrassingly parallel problemy, trzeba to ładnie przełożyć
 
+% 													vv może być trochę zbyt casual, ale póki co brzmi najlepiej, TODO
 Skalowanie rozwiązań tego typu może jednak trafić na ścianę kosztów -- niezbędne są duże ilości pamięci RAM i szybkie dyski; cierpi też niezawodność systemu, gdyż jego działanie pozostaje kompletnie uzależnione od utrzymania przy życiu konkretnego komputera. Jeśli komputer musi też propagować dane w sieci, cała komunikacja spoczywa na nim -- i wydajność jego łącza może zawieść w przypadku szczytów obciążenia.
 
 Remedium dla powyższych problemów jest próba rozdzielenia pracy pomiędzy wiele komputerów -- tu pojawia się \textbf{decentralizacja}, podział problemu na podproblemy, którymi zarządzać mogą mniejsze węzły główne, mające dostęp do węzłów roboczych. To rozwiązanie stawia też nowe wyzwania przed projektantami oprogramowania, którzy nie mogą już polegać na współdzielonej pamięci -- dane muszą być przekazywane jakąś sieciową metodą komunikacji.
@@ -55,7 +56,7 @@ Obliczenia decentralizowane uznać można za podklasę \textbf{obliczeń rozpros
 
 	%  TODO - lepsza wizualizacja systemu zdecentralizowanego, gdzie faktycznie mamy kilka różnych "master-slavów"
 \end{figure}
-
+% TODO -- asynchroniczność
 
 \section{Narzędzia w rozproszeniu danych}
 \label{sec:narzedzia}
@@ -80,7 +81,7 @@ Chcąc pogodzić kwestie bezpieczeństwa, wydajności i spójności systemu, roz
 \label{sec:podstawaProjektu}
 % napisz więcej o blokach i nagrodach TODO
 Wspomniane rozwiązania stanowią kanwę dla projektu IPFS, który stara się tworzyć efektywny, realnie rozproszony system plików, obsługujący gigantyczne zasoby danych z niskimi latencjami, redundancją danych i bez wymogu zaufania uczestnikom sieci.  Dane przechowywane w drzewie Merkla, dzięki czemu przeszukiwanie sieci ma niską złożoność obliczeniową. Projekt skupia się na warstwie infrastruktury – po stronie użytkowej przypomina nieco system kontroli wersji \texttt{git}, a dane indeksowane są dzięki sumom kontrolnym. Takie podejście doskonale sprawdza się w skryptach i przy pracach prowadzonych przez ludzi obytych z tego typu narzędziami, nie jest to jednak system gotowy dla użytkowników domowych.
-Celem tej pracy jest adaptacja dokonań projektu IPFS jako „przezroczysty” system wsparcia HTTP. System taki musi spełniać szereg wymagań: po pierwsze, nie może próbować „zastąpić” istniejących rozwiązań. Internet w obecnym kształcie nie jest gotowy na rewolucje – przykładem może być poziom przyjęcia się IPv6 (\cite{googleipv6}), następnej generacji protokołu IP, która ma między innymi rozwiązać problem rozmiaru puli adresów. Brak realnej kompatybilności wstecznej sprawia, że konieczne są rozwiązania przejściowe.
+Celem tej pracy jest adaptacja dokonań projektu IPFS jako „przezroczysty” system wsparcia HTTP. System taki musi spełniać szereg wymagań: po pierwsze, nie może próbować „zastąpić” istniejących rozwiązań. Internet w obecnym kształcie nie jest gotowy na rewolucje – przykładem może być poziom przyjęcia się IPv6 (\cite{googleipv6}), następnej generacji protokołu IP, która ma między innymi rozwiązać problem rozmiaru puli adresów. Brak realnej kompatybilności wstecznej sprawia, że konieczne są rozwiązania przejściowe. dHTTP jest bardziej nakładką, rozwinięciem obecnych rozwiązań -- co daje perspektywy spokojnego przyjęcia takiego rozwiązania przez rynek.
 
-IPFS posiada wzorcową implementację w języku Go, i jest podstawą stosu sieciowego \texttt{libp2p}. Zbiór bibliotek udostępniony w projekcie \texttt{js-libp2p} stanowi fundament projektu dHTTP, który, dzięki natywnej implementacji w JavaScripcie, może być w pełni uruchamialny z poziomu przeglądarki, oferując użytkową przezroczystość odbiorcy. Dzięki temu podejściu, dHTTP jest bardziej rozwinięciem niż zastąpieniem obecnych rozwiązań -- co daje perspektywy spokojnego przyjęcia takiego rozwiązania przez rynek.
+IPFS posiada wzorcową implementację w języku Go, i jest podstawą stosu sieciowego \texttt{libp2p}. Zbiór bibliotek udostępniony w projekcie \texttt{js-libp2p} stanowi fundament projektu dHTTP, który, dzięki natywnej implementacji w JavaScripcie, może być w pełni uruchamialny z poziomu przeglądarki, zapewniając użytkową przezroczystość odbiorcy.
 % końcówka jest dziwna, wyśpij sie i to popraw TODO
