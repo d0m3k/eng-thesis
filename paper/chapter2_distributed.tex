@@ -43,18 +43,17 @@ Obliczenia decentralizowane uznać można za podklasę \textbf{obliczeń rozpros
 	\end{subfigure}
 	\begin{subfigure}{0.5\textwidth}
 		\centering
-		\includegraphics[scale=0.5]{decentralized.pdf}
+		\includegraphics[scale=0.5]{distributed.pdf}
 		\subcaption{\label{subfigure_b}}
 	\end{subfigure}
 	\begin{subfigure}{0.6\textwidth}
 		\centering
-		\includegraphics[scale=0.5]{distributed.pdf}
+		\includegraphics[scale=0.5]{decentralized.pdf}
 		\subcaption{\label{subfigure_c}}
 	\end{subfigure}
 	
-	\caption{\label{fig:concurrentVsParalell}Wizualizacja różnicy pomiędzy systemem równoległym \protect\subref{subfigure_a}, jednym z podgrafów systemu zdecentralizowanego \protect\subref{subfigure_b} i rozproszonym \protect\subref{subfigure_c}.}
+	\caption{\label{fig:concurrentVsParalell}Wizualizacja różnicy pomiędzy systemem równoległym \protect\subref{subfigure_a}, rozproszonym \protect\subref{subfigure_b} i zdecentralizowanym \protect\subref{subfigure_c}.}
 
-	%  TODO - lepsza wizualizacja systemu zdecentralizowanego, gdzie faktycznie mamy kilka różnych "master-slavów"
 \end{figure}
 % TODO -- asynchroniczność
 
@@ -72,7 +71,7 @@ Problemem Napstera była architektura oparta o centralny serwer indeksujący -- 
 
 Błędy Napstera zostały zauważone przy kolejnych projektach tego typu. Gnutella, chcąc uniknąć istnienia {\em single point of failure}, rozgłaszała polecenia do wszystkich maszyn w sieci, co owocowało jednak drastycznym spadkiem wydajności (\cite{measuringNapsterGnutella}).
 
-Alternatywne podejście podjęte zostało przez sieć Freenet, gdzie zastosowano heurystyczny routing oparty o klucze; każdy plik otrzymuje klucz, podobne klucze lądowały na zbliżonych do siebie węzłach, dzięki czemu przeszukiwanie sieci nie wymagało punktu centralnego, a polecenia kierowane były w sposób nie wymagający wielu przeskoków. Niestety, ta metoda nie gwarantowała znalezienia danych (\cite{searchingInSmallWorld}).
+Alternatywne podejście podjęte zostało przez sieć Freenet, gdzie zastosowano heurystyczny routing oparty o klucze; każdy plik otrzymuje klucz, a podobne klucze lokowane były na zbliżonych do siebie węzłach, dzięki czemu przeszukiwanie sieci nie wymagało punktu centralnego, a polecenia kierowane były w sposób nie wymagający wielu przeskoków. Niestety, ta metoda nie gwarantowała znalezienia danych (\cite{searchingInSmallWorld}).
 
 Chcąc pogodzić kwestie bezpieczeństwa, wydajności i spójności systemu, rozpoczęte zostały intensywne prace nad rozproszonymi tablicami haszującymi (distributed hash table -- \textbf{DHT}).
  % TODO - więcej o DHT, i koniecznie coś o BitTorrencie, który stanowi sporą część kanwy dla IPFSa.
@@ -80,7 +79,7 @@ Chcąc pogodzić kwestie bezpieczeństwa, wydajności i spójności systemu, roz
 \section{Podstawa projektu}
 \label{sec:podstawaProjektu}
 % napisz więcej o blokach i nagrodach TODO
-Wspomniane rozwiązania stanowią kanwę dla projektu IPFS, który stara się tworzyć efektywny, realnie rozproszony system plików, obsługujący gigantyczne zasoby danych z niskimi latencjami, redundancją danych i bez wymogu zaufania uczestnikom sieci.  Dane przechowywane w drzewie Merkla, dzięki czemu przeszukiwanie sieci ma niską złożoność obliczeniową. Projekt skupia się na warstwie infrastruktury – po stronie użytkowej przypomina nieco system kontroli wersji \texttt{git}, a dane indeksowane są dzięki sumom kontrolnym. Takie podejście doskonale sprawdza się w skryptach i przy pracach prowadzonych przez ludzi obytych z tego typu narzędziami, nie jest to jednak system gotowy dla użytkowników domowych.
+Wspomniane rozwiązania stanowią kanwę dla projektu IPFS (\cite{ipfsWP}), który stara się tworzyć efektywny, realnie rozproszony system plików, obsługujący gigantyczne zasoby danych z niskimi latencjami, redundancją danych i bez wymogu zaufania uczestnikom sieci.  Dane przechowywane w drzewie Merkla, dzięki czemu przeszukiwanie sieci ma niską złożoność obliczeniową. Projekt skupia się na warstwie infrastruktury – po stronie użytkowej przypomina nieco system kontroli wersji \texttt{git}, a dane indeksowane są dzięki sumom kontrolnym. Takie podejście doskonale sprawdza się w skryptach i przy pracach prowadzonych przez ludzi obytych z tego typu narzędziami, nie jest to jednak system gotowy dla użytkowników domowych.
 Celem tej pracy jest adaptacja dokonań projektu IPFS jako „przezroczysty” system wsparcia HTTP. System taki musi spełniać szereg wymagań: po pierwsze, nie może próbować „zastąpić” istniejących rozwiązań. Internet w obecnym kształcie nie jest gotowy na rewolucje – przykładem może być poziom przyjęcia się IPv6 (\cite{googleipv6}), następnej generacji protokołu IP, która ma między innymi rozwiązać problem rozmiaru puli adresów. Brak realnej kompatybilności wstecznej sprawia, że konieczne są rozwiązania przejściowe. dHTTP jest bardziej nakładką, rozwinięciem obecnych rozwiązań -- co daje perspektywy spokojnego przyjęcia takiego rozwiązania przez rynek.
 
 IPFS posiada wzorcową implementację w języku Go, i jest podstawą stosu sieciowego \texttt{libp2p}. Zbiór bibliotek udostępniony w projekcie \texttt{js-libp2p} stanowi fundament projektu dHTTP, który, dzięki natywnej implementacji w JavaScripcie, może być w pełni uruchamialny z poziomu przeglądarki, zapewniając użytkową przezroczystość odbiorcy.
