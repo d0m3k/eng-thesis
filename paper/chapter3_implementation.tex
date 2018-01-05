@@ -177,9 +177,28 @@ Podstawę logiki systemu stanowi plik \texttt{dhttp.js}. Jest on interfejsem ł�
 
     \item \texttt{/dhttp/data/0.1} -- {\em protokół danych}, stanowi system przesyłu docelowych plików w dHTTP. Zorientowany strumieniowo, przesyła zgromadzone pliki w ich oryginalnym formacie. Może zostać rozszerzony o obsługę zapytań cząstkowych -- tak, aby duże pliki pobierać częściami od swoich sąsiadów.
 \end{itemize}
-Ponadto, \texttt{dhttp.js} wykorzystuje wbudowane mechanizmy \texttt{libp2p} w celu wykrywania sąsiadów i zmian sieci.
+Ponadto, \texttt{dhttp.js} wykorzystuje wbudowane {\em mechanizmy odkryć} \texttt{libp2p} w celu wykrywania sąsiadów i zmian sieci.
+
+
 % tutaj bardzo duże wypisanie wszystkich szczegółów jakie dają protokoły, z rysunkami i wszyściutkim
 
+\subsection{Warstwa sieciowa}
+Warto zaznaczyć, że rozwiązania opisywane w powyższej sekcji jako {\em protokół} są wysokopoziomową nakładką na warstwę sieciową. Jak zatem węzły sieci nawiązują połączenie?
+% rozwinąć wątek NAT-u
+
+Warto zaznaczyć, że połączenia w sieci peer-to-peer są znacznie utrudnione przez \textbf{ Network Address Translation} (NAT). NAT jest techniką stosowaną przez routery, polegającą na zmianie adresów i portów IP w toku przesyłu danych w celu udostępnienia węzłom sieci prywatnych dostęp do internetu przy użyciu jednego adresu. Gdy użytkownik za „maskaradą” (jak bywa określany NAT) wykonuje zapytania, serwery widzą adres IP pierwszego routera, który posiada publiczny adres sieciowy. Odpowiedzi są możliwe dzięki informacjom przechowywanym przez routery prowadzące ten typ komunikacji.
+
+Jest to konieczność w obliczu wyczerpanej puli adresów IPv4, prowadzi jednak do sytuacji, w której otwarcie bezpośredniego łącza pomiędzy dwoma użytkownikami końcowymi jest z reguły niemożliwe -- nie ma możliwości odpytania adresu IP końcowego komputera.
+
+W celu poradzenia sobie z tym problemem, dHTTP wykorzystuje bibliotekę \texttt{js-libp2p-webrtc-star}. To rozwiązanie działa na zasadzie serwera spotkań ({\em Rendezvous Server}), który stanowi swoisty przekaźnik i pozwala na rejestrację węzłów. Dzięki temu, jest jednocześnie odpowiedzialny za warstwę transportu jak i {\em mechanizm odkryć}
+
+Niestety, stawia to pod znakiem zapytania rozproszenie systemu -- jak widać na,
+% TODO zacytuj rysunek
+obecnie system przypomina bardziej scentralizowaną topologię gwiazdy niż system faktycznie rozproszony. Obciąża też {\em Rendezvous Server} koniecznością przekazywania treści. Jest to jednak rozwiązanie przejściowe i na chwilę obecną konieczne -- \texttt{js-libp2p} w chwili pisania pracy nie udostępnia innych metod trawersowania NAT-u.
+
+Warto dodać, że w przypadku sieci opartej wyłącznie o węzły w sieci lokalnej możliwe jest stosowanie tzw. Multicast DNS, który nie potrzebuje żadnego punktu centralnego; w przypadku serwerów posiadających publiczne adresy IP, możliwe staje się użycie list adresów utrzymywanych przez trackery -- oba rozwiązania pozwalają na bezpośredni transport pomiędzy węzłami (\cite{discoverylibp2p}).
+
+% TODO rysunek prezentujący architekturę gwiazdy w sieci
 \section{Aplikacje}
 
 \subsection{Węzeł}
