@@ -85,22 +85,49 @@ stats: {
 
 \subsubsection{\texttt{storage}}
 \begin{lstlisting}[language=javascript]
-swarm: { 
-    nodes: { 
-        QmVxxoRFLR8VjbqeVer9Z9DqCJoJT36c9Uomd9AtP8NBx6: // PeerId
-            PeerInfo {...}
-    } 
+storage: {
+    quotas: {
+        RAM: {
+            files: 0, megabytes: 0
+        },
+        drive: {
+            files: 0, megabytes: 0
+        }
+    },
+    RAMFiles: {
+        files: {
+            "http://example.com/logo.png": { // RequestURL
+                url: "http://example.com/logo.png", // RequestURL
+                ETag: "w/kjadDJKj",
+                value: Blob
+            },
+            "http://example.com/logoLocalStorage.png": { ... },
+            ...
+        }
+    },
+    driveFiles: {
+        files: {
+            "http://example.com/onDrive.png": { // RequestURL
+                url: "http://example.com/onDrive.png", // RequestURL
+                ETag: "w/kjadDJKj"
+            },
+            "http://example.com/onDrive2.png": { ... },
+            ...
+        }
+    }
 }
 \end{lstlisting}
-\texttt{swarm} jest strukturą utrzymującą informacje na temat wszystkich węzłów, które są bezpośrednio podłączone do obecnego. Reprezentuje więc swoisty {\em lokalny klaster}, z całością którego można nawiązywać połączenia.
+\texttt{storage} nakłada warstwę abstrakcji na obsługę plików utrzymywanych przez węzeł, która automatyzuje proces wyboru rodzaju pamięci, czy odczytów z różnych źródeł.
 
 \textbf{Pola:}
 \begin{itemize}
-    \item \textbf{\texttt{nodes}} -- obiekt, w którym poszczególne elementy reprezentują \texttt{PeerInfo} -- kompleksowy zbiór informacji z API \texttt{js-libp2p}, pozwalający na nawiązywanie połączeń.
+    \item \textbf{\texttt{quotas}} -- obiekt który zawiera w sobie konfigurację ograniczeń pamięci. Dla wartości \texttt{0} nie istnieją żadne ograniczenia; wartość \texttt{-1} oznacza zakaz korzystania z danego rodzaju pamięci.
+    \item \textbf{\texttt{RAMFiles}} -- zbiór wszystkich plików przechowywanych w pamięci 
 \end{itemize}
 
 
 \subsection{Funkcje}
+\label{sub:functions}
 
 \subsection{Wydarzenia}
 % to może nie być aż tak strict; może lub musi jednak odnosić się do istniejących funkcji
