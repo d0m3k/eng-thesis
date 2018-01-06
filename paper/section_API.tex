@@ -4,7 +4,7 @@ W tej sekcji szczegółowo opisane zostały udostępnione przez \texttt{dhttp.js
 Podstawowym założeniem jest istnienie singletona \texttt{dhttpClient}, który przy rozruchu aplikacji inicjalizuje węzeł sieci. Wszelkie odwołania do działania węzła powinny polegać na rejestrowaniu wydarzeń i wywoływaniu funkcji globalnego obiektu \texttt{dhttpClient}.
 
 \subsection{Struktury danych}
-W celu poprawy wydajności i uproszczenia przepływów w aplikacji, dHTTP oferuje kilka struktur aktualizowanych dzięki sieci, informujących o dostępności danych.
+W celu poprawy wydajności i uproszczenia przepływów w aplikacji, dHTTP oferuje kilka struktur informujących o dostępności danych.
 
 Typy struktur jak i funkcje oferowane przez \texttt{js-libp2p}, do których odnosi się poniższe API, opisane są na stronie projektu (\cite{libp2pReadme}).
 
@@ -14,10 +14,12 @@ Typy struktur jak i funkcje oferowane przez \texttt{js-libp2p}, do których odno
     \item \textbf{\texttt{RequestURL}} -- \texttt{String} zawierający ścieżkę zapytania klienckiego. Jeśli klient odpyta nasz serwer na adresie \texttt{http://localhost:34887/http://example.com/script.js}, instancja \texttt{RequestURL} zawierać będzie \texttt{http://example.com/script.js}.
 \end{itemize}
 
+% 
+
 \subsubsection{\texttt{filesInNetwork}}
 \begin{lstlisting}[language=javascript]
 filesInNetwork: {
-        "http://example.com/file.jpg": {
+        "http://example.com/file.jpg": { // RequestURL
             nodes: new Set([PeerId]),
             popularityIndex: 0
         },
@@ -33,29 +35,75 @@ Poszczególne elementy indeksowane są poprzez adresy URL zasobów pobieranych p
     \item \textbf{\texttt{nodes}} -- \texttt{Set} zawierający \texttt{PeerId} tych klientów, którzy posiadają dostęp do danego pliku.
     \item \textbf{\texttt{popularityIndex}} -- liczba całkowita określająca popularność pliku z perspektywy tego węzła. Może być wymieniana z innymi węzłami sieci w celu optymalizacji obciążenia.
 \end{itemize}
+
+% 
 
 \subsubsection{\texttt{swarm}}
 \begin{lstlisting}[language=javascript]
-filesInNetwork: {
-        "http://example.com/file.jpg": {
-            nodes: new Set([PeerId]),
-            popularityIndex: 0
-        },
-        "http://example.com/script.js" : {...}
-    }
+swarm: { 
+    nodes: { 
+        QmVxxoRFLR8VjbqeVer9Z9DqCJoJT36c9Uomd9AtP8NBx6: // PeerId
+            PeerInfo {...}
+    } 
+}
 \end{lstlisting}
-\texttt{filesInNetwork} jest strukturą odpytywaną przy połączeniu klienckim. Stanowi pierwszy punkt wejścia do sieci, i zoptymalizowany jest pod szybkie przeszukanie i weryfikację, czy plik jest dostępny przy użyciu dHTTP.
-
-Poszczególne elementy indeksowane są poprzez adresy URL zasobów pobieranych przez klienta (\texttt{ReqestURL}).
+\texttt{swarm} jest strukturą utrzymującą informacje na temat wszystkich węzłów, które są bezpośrednio podłączone do obecnego. Reprezentuje więc swoisty {\em lokalny klaster}, z całością którego można nawiązywać połączenia.
 
 \textbf{Pola:}
 \begin{itemize}
-    \item \textbf{\texttt{nodes}} -- \texttt{Set} zawierający \texttt{PeerId} tych klientów, którzy posiadają dostęp do danego pliku.
-    \item \textbf{\texttt{popularityIndex}} -- liczba całkowita określająca popularność pliku z perspektywy tego węzła. Może być wymieniana z innymi węzłami sieci w celu optymalizacji obciążenia.
+    \item \textbf{\texttt{nodes}} -- obiekt, w którym poszczególne elementy reprezentują \texttt{PeerInfo} -- kompleksowy zbiór informacji z API \texttt{js-libp2p}, pozwalający na nawiązywanie połączeń.
+\end{itemize}
+
+% 
+
+\subsubsection{\texttt{stats}}
+\begin{lstlisting}[language=javascript]
+stats: {
+    downloaded: {bytes: 0, files: 0},
+    fetched: {bytes: 0, files: 0},
+    uploaded: {bytes: 0, files: 0},
+}
+\end{lstlisting}
+\texttt{stats} gromadzi statystyki zużycia sieci przez obecny węzeł.
+
+\textbf{Pola:}
+\begin{itemize}
+    \item \textbf{\texttt{downloaded}} -- ile danych pobrano z perspektywy klienta.
+    \item \textbf{\texttt{fetched}} -- ile danych pobrano w tle -- podczas operacji, niezwiązanych bezpośrednio z działania użytkownika, lecz podjętych w celach optymalizacyjnych.
+    \item \textbf{\texttt{uploaded}} -- ile danych wysłano do innych węzłów podczas działań optymalizacyjnych i propagacji danych w systemie.
+\end{itemize}
+
+% 
+
+\subsubsection{\texttt{node}}
+\begin{lstlisting}[language=javascript]
+    node: Node {protocols: {...}, peerInfo: PeerInfo, ...}
+\end{lstlisting}
+\texttt{node} jest obiektem pozwalającym na bezpośredni dostęp do reprezentacji danego węzła w warstwie \texttt{js-libp2p}. Pozwala na wykonywanie połączeń i propagację danych z poziomu innych funkcji dHTTP.
+
+% 
+
+\subsubsection{\texttt{storage}}
+\begin{lstlisting}[language=javascript]
+swarm: { 
+    nodes: { 
+        QmVxxoRFLR8VjbqeVer9Z9DqCJoJT36c9Uomd9AtP8NBx6: // PeerId
+            PeerInfo {...}
+    } 
+}
+\end{lstlisting}
+\texttt{swarm} jest strukturą utrzymującą informacje na temat wszystkich węzłów, które są bezpośrednio podłączone do obecnego. Reprezentuje więc swoisty {\em lokalny klaster}, z całością którego można nawiązywać połączenia.
+
+\textbf{Pola:}
+\begin{itemize}
+    \item \textbf{\texttt{nodes}} -- obiekt, w którym poszczególne elementy reprezentują \texttt{PeerInfo} -- kompleksowy zbiór informacji z API \texttt{js-libp2p}, pozwalający na nawiązywanie połączeń.
 \end{itemize}
 
 
+\subsection{Funkcje}
+
 \subsection{Wydarzenia}
+% to może nie być aż tak strict; może lub musi jednak odnosić się do istniejących funkcji
 \subsection{Komunikaty metaprotokołu}
 % TODO -- umieść wszystkie możliwe komunikaty metaprotokołu na liście
 \subsection{Połączenia}
