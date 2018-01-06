@@ -140,14 +140,6 @@ Podkreślić należy również pozytywny wpływ strumieni na wydajność -- ta a
 \end{lstlisting}
 
 
-
-% \subsection{Problemy warstwy sieciowej}
-% \label{sec:networkIssues}
-% % to w toku implementacji
-% Choć przeglądarki implementują coraz więcej rozwiązań i pozwalają na stosowanie najnowszych protokołów, niektóre kwestie pozostają poza ich kompetencjami.
-
-% Największym problemem systemów opartych o IPv4 jest obecnie wyczerpana pula adresów. Protokół, o który wciąż oparta jest większość komunikacji Internetu, wspiera maksymalnie 4~294~967~296 adresów -- co mogło wydawać się gigantyczną liczbą w momencie implementacji, szybko jednak zostało pochłonięte przez sieć.
-
 % W celu walki z zaimplementowano wiele rozwiązań, od 
 
 % Jak Bóg da, to się napisze te rzeczy
@@ -186,27 +178,63 @@ Ponadto, \texttt{dhttp.js} wykorzystuje wbudowane {\em mechanizmy odkryć} \text
 Warto zaznaczyć, że rozwiązania opisywane w powyższej sekcji jako {\em protokół} są wysokopoziomową nakładką na warstwę sieciową. Jak zatem węzły sieci nawiązują połączenie?
 % rozwinąć wątek NAT-u
 
-Warto zaznaczyć, że połączenia w sieci peer-to-peer są znacznie utrudnione przez \textbf{ Network Address Translation} (NAT). NAT jest techniką stosowaną przez routery, polegającą na zmianie adresów i portów IP w toku przesyłu danych w celu udostępnienia węzłom sieci prywatnych dostęp do internetu przy użyciu jednego adresu. Gdy użytkownik za „maskaradą” (jak bywa określany NAT) wykonuje zapytania, serwery widzą adres IP pierwszego routera, który posiada publiczny adres sieciowy. Odpowiedzi są możliwe dzięki informacjom przechowywanym przez routery prowadzące ten typ komunikacji.
+Połączenia w sieci peer-to-peer są znacznie utrudnione przez \textbf{ Network Address Translation} (NAT). NAT jest techniką stosowaną przez routery, polegającą na zmianie adresów i portów IP w toku przesyłu danych w celu udostępnienia węzłom sieci prywatnych dostęp do internetu przy użyciu jednego adresu. Gdy użytkownik za „maskaradą” (jak bywa określany NAT) wykonuje zapytania, serwery widzą adres IP pierwszego routera, który posiada publiczny adres sieciowy. Odpowiedzi są możliwe dzięki informacjom przechowywanym przez routery prowadzące ten typ komunikacji.
 
 Jest to konieczność w obliczu wyczerpanej puli adresów IPv4, prowadzi jednak do sytuacji, w której otwarcie bezpośredniego łącza pomiędzy dwoma użytkownikami końcowymi jest z reguły niemożliwe -- nie ma możliwości odpytania adresu IP końcowego komputera.
 
-W celu poradzenia sobie z tym problemem, dHTTP wykorzystuje bibliotekę \texttt{js-libp2p-webrtc-star}. To rozwiązanie działa na zasadzie serwera spotkań ({\em Rendezvous Server}), który stanowi swoisty przekaźnik i pozwala na rejestrację węzłów. Dzięki temu, jest jednocześnie odpowiedzialny za warstwę transportu jak i {\em mechanizm odkryć}
+W celu poradzenia sobie z tym problemem, dHTTP wykorzystuje bibliotekę \texttt{js-libp2p-webrtc-star}. To rozwiązanie działa na zasadzie serwera spotkań ({\em Rendezvous Server}), który stanowi swoisty przekaźnik i pozwala na rejestrację węzłów. Dzięki temu, jest jednocześnie odpowiedzialny za warstwę transportu jak i {\em mechanizm odkryć}.
 
-Niestety, stawia to pod znakiem zapytania rozproszenie systemu -- jak widać na,
-% TODO zacytuj rysunek
-obecnie system przypomina bardziej scentralizowaną topologię gwiazdy niż system faktycznie rozproszony. Obciąża też {\em Rendezvous Server} koniecznością przekazywania treści. Jest to jednak rozwiązanie przejściowe i na chwilę obecną konieczne -- \texttt{js-libp2p} w chwili pisania pracy nie udostępnia innych metod trawersowania NAT-u.
+\begin{figure}[h]
+        \centering
+        \includegraphics[scale=0.5]{webrtc-star.pdf}
+        % \subcaption{\label{subfigure_a}}
+    
+        \caption{Wizualizacja sieci opartej o \texttt{js-libp2p-webrtc-star}, z przykładem wirtualnego połączenia transportowego pomiędzy dwoma węzłami.}
+        \label{fig:webrtc-star}
+\end{figure}
 
-Warto dodać, że w przypadku sieci opartej wyłącznie o węzły w sieci lokalnej możliwe jest stosowanie tzw. Multicast DNS, który nie potrzebuje żadnego punktu centralnego; w przypadku serwerów posiadających publiczne adresy IP, możliwe staje się użycie list adresów utrzymywanych przez trackery -- oba rozwiązania pozwalają na bezpośredni transport pomiędzy węzłami (\cite{discoverylibp2p}).
+Niestety, stawia to pod znakiem zapytania rozproszenie systemu -- jak widać na rys. \ref{fig:webrtc-star}, obecnie system przypomina bardziej scentralizowaną topologię gwiazdy niż system faktycznie rozproszony. Obciąża też {\em Rendezvous Server} koniecznością przekazywania treści. Jest to jednak rozwiązanie przejściowe i na chwilę obecną konieczne -- \texttt{js-libp2p} w czasie tworzenia tego projektu nie udostępnia innych metod trawersowania NAT-u.
 
-% TODO rysunek prezentujący architekturę gwiazdy w sieci
-\section{Aplikacje}
+Warto dodać, że w przypadku sieci opartej wyłącznie o węzły w sieci lokalnej możliwe jest stosowanie tzw. Multicast DNS, który nie potrzebuje żadnego punktu centralnego; w przypadku serwerów posiadających publiczne adresy IP, możliwe staje się użycie list adresów utrzymywanych przez trackery -- oba rozwiązania pozwalają na bezpośredni transport pomiędzy węzłami i nie wymagają zmiany logiki systemu (\cite{discoverylibp2p}).
 
-\subsection{Węzeł}
+\subsection{Struktura metadanych}
+
+Metadane przesyłane przy użyciu \texttt{/dhttp/meta/0.1} to podstawa przepływu danych w systemie. Wykorzystywane do budowania wspólnej bazy wiedzy na temat sieci, składać się muszą z lekkich struktur i jasnych komunikatów.
+
+Podstawowe zapytanie \texttt{/dhttp/meta/0.1} wygląda następująco:
+
+\begin{lstlisting}[language=javascript]
+    {
+        type: "echo",
+        peerId: dhttpClient.node.peerInfo.id.toB58String(),
+        text: "Hello, fellow node."
+    }
+\end{lstlisting}
+% TODO -- umieść wszystkie możliwe komunikaty metaprotokołu na liście
+
+\subsection{Dostępne komunikaty metaprotokołu}
+
+\subsection{Przepływy}
+
+\subsection{Cykl życia węzła}
+
+\subsection{Algorytm transportu danych}
+
+% TODO -- tę sekcję zdecydowanie należy napisać i dobrze rozwinąć, ale gdzie powinna być umieszczona?
+\subsection{API}
+\subsubsection{Struktury danych}
+\subsubsection{Wydarzenia}
+\subsubsection{Komunikaty}
+\subsubsection{Połączenia}
+
+\section{Węzeł \texttt{dHTTP}}
 
 \subsection{Przechowywanie danych}
 \label{sec:dataPropagation}
 
-\subsection{Klient}
+\section{Klient \texttt{dHTTP}}
+\subsection{Eksperymentalny pełny klient}
+
 
 
 
