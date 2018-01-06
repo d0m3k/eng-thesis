@@ -1,0 +1,61 @@
+\section{API}
+W tej sekcji szczegółowo opisane zostały udostępnione przez \texttt{dhttp.js} funkcje i mechanizmy związane ze strukturami i przepływami danych pomiędzy węzłami. W przypadku wątpliwości co do działania pewnych rozwiązań czy logicznych połączeń między nimi, warto odnieść się do podsekcji \ref{sub:flows}, opisującej przepływy danych, oraz podsekcji \ref{sub:nodeCycle} opisującej cykl życia węzła.
+
+Podstawowym założeniem jest istnienie singletona \texttt{dhttpClient}, który przy rozruchu aplikacji inicjalizuje węzeł sieci. Wszelkie odwołania do działania węzła powinny polegać na rejestrowaniu wydarzeń i wywoływaniu funkcji globalnego obiektu \texttt{dhttpClient}.
+
+\subsection{Struktury danych}
+W celu poprawy wydajności i uproszczenia przepływów w aplikacji, dHTTP oferuje kilka struktur aktualizowanych dzięki sieci, informujących o dostępności danych.
+
+Typy struktur jak i funkcje oferowane przez \texttt{js-libp2p}, do których odnosi się poniższe API, opisane są na stronie projektu (\cite{libp2pReadme}).
+
+\subsubsection{Struktury podstawowe}
+\begin{itemize}
+    \item \textbf{\texttt{PeerId}} -- \texttt{String} zawierający ID węzła sieci, uzyskane dzięki zawołaniu \texttt{PeerInfo.id.toB58String()}
+    \item \textbf{\texttt{RequestURL}} -- \texttt{String} zawierający ścieżkę zapytania klienckiego. Jeśli klient odpyta nasz serwer na adresie \texttt{http://localhost:34887/http://example.com/script.js}, instancja \texttt{RequestURL} zawierać będzie \texttt{http://example.com/script.js}.
+\end{itemize}
+
+\subsubsection{\texttt{filesInNetwork}}
+\begin{lstlisting}[language=javascript]
+filesInNetwork: {
+        "http://example.com/file.jpg": {
+            nodes: new Set([PeerId]),
+            popularityIndex: 0
+        },
+        "http://example.com/script.js" : {...}
+    }
+\end{lstlisting}
+\texttt{filesInNetwork} jest strukturą odpytywaną przy połączeniu klienckim. Stanowi pierwszy punkt wejścia do sieci, i zoptymalizowany jest pod szybkie przeszukanie i weryfikację, czy plik jest dostępny przy użyciu dHTTP.
+
+Poszczególne elementy indeksowane są poprzez adresy URL zasobów pobieranych przez klienta (\texttt{ReqestURL}).
+
+\textbf{Pola:}
+\begin{itemize}
+    \item \textbf{\texttt{nodes}} -- \texttt{Set} zawierający \texttt{PeerId} tych klientów, którzy posiadają dostęp do danego pliku.
+    \item \textbf{\texttt{popularityIndex}} -- liczba całkowita określająca popularność pliku z perspektywy tego węzła. Może być wymieniana z innymi węzłami sieci w celu optymalizacji obciążenia.
+\end{itemize}
+
+\subsubsection{\texttt{swarm}}
+\begin{lstlisting}[language=javascript]
+filesInNetwork: {
+        "http://example.com/file.jpg": {
+            nodes: new Set([PeerId]),
+            popularityIndex: 0
+        },
+        "http://example.com/script.js" : {...}
+    }
+\end{lstlisting}
+\texttt{filesInNetwork} jest strukturą odpytywaną przy połączeniu klienckim. Stanowi pierwszy punkt wejścia do sieci, i zoptymalizowany jest pod szybkie przeszukanie i weryfikację, czy plik jest dostępny przy użyciu dHTTP.
+
+Poszczególne elementy indeksowane są poprzez adresy URL zasobów pobieranych przez klienta (\texttt{ReqestURL}).
+
+\textbf{Pola:}
+\begin{itemize}
+    \item \textbf{\texttt{nodes}} -- \texttt{Set} zawierający \texttt{PeerId} tych klientów, którzy posiadają dostęp do danego pliku.
+    \item \textbf{\texttt{popularityIndex}} -- liczba całkowita określająca popularność pliku z perspektywy tego węzła. Może być wymieniana z innymi węzłami sieci w celu optymalizacji obciążenia.
+\end{itemize}
+
+
+\subsection{Wydarzenia}
+\subsection{Komunikaty metaprotokołu}
+% TODO -- umieść wszystkie możliwe komunikaty metaprotokołu na liście
+\subsection{Połączenia}
