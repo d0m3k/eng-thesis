@@ -1,12 +1,33 @@
 \chapter{Testy wydajności}
 \label{cha:testyIOptymalizacje}
 
-W ramach testu systemu skonstruowano stronę testową, która składa się z pięciu wysokiej jakości zdjęć.
+W ramach testu systemu skonstruowano stronę testową, która składa się z pięciu wysokiej jakości zdjęć. Łączny rozmiar strony internetowej i zdjęć wynosi 41 MB.
 
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.3]{perf-page.png}
 
+    \caption{Zrzut ekranu prezentujący stronę testową aplikacji.}
+    \label{fig:test-page}
+\end{figure}
 
-\section{Wydajność systemu}
-\label{sec:wydajnosc}
+W celu oceny wydajności systemu, uruchomiony zostanie serwer \texttt{http} w środowisku node.js, na serwerze znajdującym się w obszarze dostępności US East (Ohio) Amazon Web Services. Przy wykorzystaniu pakietu \texttt{throttle} (\cite{npmThrottle}) możliwe będzie symulowanie ograniczonej przepustowości zarówno serwera końcowego, jak i pojedynczych węzłów sieci dHTTP. Wyniki są uśrednieniem pięciu prób wczytania plików, bez użycia pamięci podręcznej przeglądarki.
 
+\section{Rezultaty testów}
+\begin{table}[H]
+\centering
+    \begin{tabular}{|c|c|c|c|c|c|}
+        \hline
+         & & \multicolumn{2}{c|}{\textbf{Serwer}} \\ \hline
+         & & \textbf{Brak ograniczeń} & \textbf{1 Mbps} \\ \hline
+         \multicolumn{2}{|c|}{\textbf{Brak dHTTP}} & 15.73s & cell2 \\ \hline
+         \multicolumn{2}{|c|}{\textbf{Węzeł lokalny, 0 sąsiadów}} & 15.52s & cell2 \\ \hline \hline
+         \multirow{2}{*}{\textbf{1 sąsiad}} & \textbf{Brak ograniczeń} & 17.31s & cell5 \\ 
+          & \textbf{1 Mbps} & cell9 & cell5 \\  \hline
+         \multirow{2}{*}{\textbf{5 sąsiadów}} & \textbf{Brak ograniczeń} & 12.45s & cell5 \\ 
+          & \textbf{1 Mbps} & cell9 & cell5 \\  \hline
+    \end{tabular}
+    \label{tab:test-results}
+\end{table}
 
-
+\section{Wnioski}
