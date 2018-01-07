@@ -212,7 +212,7 @@ Węzeł \texttt{dHTTP} to aplikacja w node.js, która oprócz \texttt{dhttp.js} 
 \subsection{Struktura projektu}
 \label{sec:transportAlgorithm}
 % cykl "przepływu danych" -- przecięcie protokołu meta i data
-Projekt, udostępniony jako \texttt{eng-thesis-node}, posiada następującą strukturę plików:
+Projekt, udostępniony jako \texttt{dhttp-node}, posiada następującą strukturę plików:
 \begin{lstlisting}
     |__ package.json           // 1
     |__ public
@@ -295,17 +295,35 @@ Idea ta jest najbardziej złożona algorytmicznie: należałoby przechwytywać i
 \subsubsection{Propagacja na podstawie zapytań}
 Idea propagacji na podstawie zapytań proponuje proste rozwiązanie -- jeżeli dany węzeł zostanie zapytany o zasób i nie będzie go posiadał, zgodnie z algorytmem przedstawionym w sekcji \ref{sec:transportAlgorithm} przekieruje użytkownika do innego węzła sieci lub przekaże mu zasób bezpośrednio z serwera; robiąc to jednak, zainicjuje pobranie danego pliku u siebie, rozszerzając zasięg sieci i umożliwiając pobieranie pliku od siebie w przyszłości.
 
-Prostota tego rozwiązania
-
-
-\subsection{Komunikacja z klientem}
-% TODO -- Narysuj superschemat, w którym reakcje na komunikaty są wynikiem REST API, podobnie z plikami; środek kwestia własna
-
-
+Z racji prostoty tego rozwiązania, przy jego jednoczesnym wpływie na dynamikę sieci i łatwości testowania, zostało ono zaimplementowane w projekcie \texttt{dhttp-node}.
 
 \section{Klient \texttt{dHTTP}}
+Idea lekkiego klienta będącego wtyczką do Google Chrome -- udostępnia możliwość korzystania z sieci dHTTP dla zdefiniowanych typów zasobów, wykorzystując jako punkt wejścia wybrany węzeł sieci.
+
+Wtyczka wykorzystuje udostępniane przez Google Chrome Extension API \texttt{chrome.webRequest} (\cite{webRequestAPI}), pozwalające na operację podmiany adresu zapytania zanim zostanie ono wysłane na serwer; dzięki temu możliwe są przekierowania dla zasobów niewymagające modyfikacji DOM-u stron internetowych, uwzględniające także asynchroniczne zapytania AJAX.
+
+\begin{figure}[h]
+	\centering
+	\begin{subfigure}{0.4\textwidth}
+		\centering
+		\includegraphics[scale=0.6]{redir.png}
+		\subcaption{\label{subfigure_a}}
+	\end{subfigure}
+	\begin{subfigure}{0.5\textwidth}
+		\centering
+		\includegraphics[scale=0.6]{no-redir.png}
+		\subcaption{\label{subfigure_b}}
+	\end{subfigure}
+	
+	\caption{Przykład zapytania, które zostało przekierowane przez wtyczkę -- 307 jest kodem przekierowania wewnętrznego}
+
+\end{figure}
+
 \subsection{Aplikacja}
+
+
 \subsection{Połączenie z węzłem}
+% TODO -- Narysuj superschemat, w którym reakcje na komunikaty są wynikiem REST API, podobnie z plikami; środek kwestia własna
 \subsection{Eksperymentalny pełny klient}
 
 
