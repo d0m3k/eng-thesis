@@ -143,12 +143,12 @@ Dzięki szeregowi udostępnionych funkcji, dHTTP umożliwia wysokopoziomowe, asy
 
 \subsubsection{\texttt{filesAvailable/0}}
 \begin{lstlisting}[language=javascript]
-    filesAvailable: function() -> [RequestURL]
+    filesAvailable: function() -> ({RequestURL: {PopularityIndex}})
 \end{lstlisting}
 \texttt{filesAvailable} jest funkcją stanowiącą wykaz wszystkich plików udostępnionych przez dany węzeł. Nie stosuje rozróżnienia na dane dostępne w RAMie czy na dysku -- ta optymalizacja pozostaje na poziomie poszczególnych węzłów, aby nie obciążać wszystkich klientów sieci.
 
 \textbf{Wartość zwracana:}
-Lista \texttt{RequestURL} obsługiwanych przez dany węzeł.
+Mapa \texttt{RequestURL} obsługiwanych przez dany węzeł na ich \texttt{PopularityIndex}.
 
 % \textbf{Przykład wywołania:}
 % \begin{lstlisting}[language=javascript]
@@ -239,7 +239,7 @@ Lista \texttt{RequestURL} obsługiwanych przez dany węzeł.
 % 
 
 \subsection{Wydarzenia}
-Ta sekcja również zawiera funkcje, spełniają one jednak specyficzną funkcję -- są częścią {\em reaktywną} systemu, wołane są poprzez odwołania w czasie połączeń między węzłami i stanowią definicję reakcji na sytuacje i zapytania występujące w systemie.
+Ta sekcja zawiera funkcje o wspólnej charakterystyce -- są częścią {\em reaktywną} systemu, wołane są poprzez odwołania w czasie połączeń między węzłami i stanowią definicję reakcji na sytuacje i zapytania występujące w systemie.
 
 % 
 
@@ -304,5 +304,86 @@ Ta sekcja również zawiera funkcje, spełniają one jednak specyficzną funkcj�
 % to może nie być aż tak strict; może lub musi jednak odnosić się do istniejących funkcji
 \subsection{Komunikaty metaprotokołu}
 \label{sub:metaprotocolMessages}
-% TODO -- umieść wszystkie możliwe komunikaty metaprotokołu na liście!
-\subsection{Połączenia}
+
+Metaprotokół dHTTP służy prostej propagacji danych na temat węzłów i plików dostępnych w systemie. Sekcja \ref{sub:metadata} wprowadza podstawowe zapytanie dHTTP; poniżej omówienie stosowanych w systemie komunikatów i ich reakcji.
+
+% 
+
+\subsubsection{\texttt{echo}}
+\begin{lstlisting}[language=javascript]
+    {
+        type: "echo",
+        % peerId: dhttpClient.node.peerInfo.id.toB58String(), // ID pytającego
+        text: "Hello, node."
+    }
+\end{lstlisting}
+
+Komunikat stosowany w celach debugowania i sprawdzenia połączenia między węzłami, odpowiednik polecenia \texttt{ping}. Odpowiedź powinna zawierać analogiczną zawartość.
+
+% 
+
+\subsubsection{\texttt{introduction}}
+\begin{lstlisting}[language=javascript]
+    {
+        type: "introduction",
+        peerId: dhttpClient.node.peerInfo.id.toB58String(),
+        files: dhttpClient.filesAvailable()
+    }
+\end{lstlisting}
+
+Komunikat informujący o plikach dostępnych w danym węźle. Pozwala na uzupełnienie informacji na temat dostępności plików. Ponieważ wszystkie węzły rozsiewają \texttt{introduction} sobie nawzajem, odpowiedź nie jest wymagana.
+
+% 
+
+\subsubsection{\texttt{hasFile}}
+\begin{lstlisting}[language=javascript]
+    {
+        type: "hasFile",
+        peerId: dhttpClient.node.peerInfo.id.toB58String(),
+        files: RequestURL
+    }
+\end{lstlisting}
+
+Komunikat pytający, czy dany węzeł posiada plik lub zna węzeł który może ten plik posiadać.
+
+\textbf{Oczekiwana odpowiedź:}
+\begin{lstlisting}[language=javascript]
+    {
+        type: "hasFile",
+        peerId: dhttpClient.node.peerInfo.id.toB58String(),
+        hasFile: true/false,
+        popularityIndex: PopularityIndex,
+        peerWithFile: PeerInfo // jeśli plik nie jest posiadany przez dany węzeł, ale wie on o potencjalnym posiadaczu
+    }
+\end{lstlisting}
+
+% 
+
+\subsubsection{\texttt{addFile}}
+\begin{lstlisting}[language=javascript]
+    {
+        type: "addFile",
+        peerId: dhttpClient.node.peerInfo.id.toB58String(),
+        files: RequestURL,
+        popularityIndex: PopularityIndex
+    }
+\end{lstlisting}
+
+Komunikat informujący o pojawieniu się nowego pliku; może być używany wielokrotnie dla tego samego pliku w celu aktualizacji informacji o \texttt{PopularityIndex}. Jest propagowany w całej sieci; jeśli inny węzeł posiada ten sam plik, powinien odpowiedzieć analogicznie.
+
+
+% 
+
+\subsubsection{\texttt{removeFile}}
+\begin{lstlisting}[language=javascript]
+    {
+        type: "removeFile",
+        peerId: dhttpClient.node.peerInfo.id.toB58String(),
+        files: RequestURL
+    }
+\end{lstlisting}
+
+Komunikat informujący o usunięciu pliku z danego węzła, propagowany w całe sieci w celu aktualizacji tablicy plików.
+
+
+% TODO - rysunek przedstawiający całe API -- możliwe, że posłuży za niego opis w kolejnej sekcji.

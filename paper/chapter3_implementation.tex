@@ -91,7 +91,7 @@ Pozioma oś modelu współbieżności JavaScriptu zapewnia natywne wsparcie dla 
     })
 \end{lstlisting}
 
-W powyższym przykładzie, widać rejestrację reakcji na kliknięcie w przycisk. Jeżeli dana sytuacja nastąpi, wiadomość wysłana zostanie na kolejkę, co w momencie jej napotkania doprowadzi do wrzucenia na stos zarejestrowanej funkcji.
+W powyższym przykładzie zaprezentowano rejestrację reakcji na kliknięcie w przycisk. Jeżeli dana sytuacja nastąpi, wiadomość wysłana zostanie na kolejkę, co w momencie jej napotkania doprowadzi do wrzucenia na stos zarejestrowanej funkcji.
 
 \begin{figure}[h]
 
@@ -123,7 +123,7 @@ dhttpClient.node.dial(peerInfo, '/dhttp/meta/0.1', (err, connStream) => {
 }
 
 
-// Przykład uruchamiania serwera HTTP w node.js dzięki 'http-server'
+// Przykład uruchamiania serwera HTTP w node.js dzięki "require('http')"
 http.createServer((req, res) => {
     // Przekazanie strumienia req strumieniowi request, który następnie zostanie przekazany do res. W efekcie zadziałamy jako najprostsze proxy - otrzymamy dane o oryginalnym zapytaniu, wywołamy je z punktu widzenia serwera, i przekażemy wynik w ramach odpowiedzi.
     req.pipe(request(req.url)).pipe(res)
@@ -140,25 +140,6 @@ Podkreślić należy również pozytywny wpływ strumieni na wydajność -- ta a
     //kiedy strumień pliku się zakończy, nastąpi zamknięcie połączenia aby poinformować odbiorcę, że nic już na niego nie czeka
     fileStream.on('finish', ()=> connStream.close())
 \end{lstlisting}
-
-
-% W celu walki z zaimplementowano wiele rozwiązań, od 
-
-% Jak Bóg da, to się napisze te rzeczy
-% \subsubsection{Decentralizacja czy rozproszenie?}
-% \label{sec:decentralizacjaCzyRozproszenie}
-
-% \subsection{Bezpieczeństwo}
-% \label{sec:security}
-
-% \subsubsection{Czy autentykacja to nasza brożka?}
-% \subsubsection{Gdzie leżą granice zdrowych heurystyk?}
-
-% \subsection{Enkapsulacja}
-
-% \subsection{Komunikacja}
-
-% Z tego poniżej może powstać osobny rozdział, gdzie to co powyżej stanowiłoby bardziej rozważania na temat właściwego podejścia do realizacji projektu, a to poniżej -- faktyczny opis implementacji systemu, podzielony bardziej granularnie dla każdego z elemenetów
 
 \section{Interfejs \texttt{dhttp.js}}
 
@@ -200,6 +181,7 @@ Niestety, stawia to pod znakiem zapytania rozproszenie systemu -- jak widać na 
 Warto dodać, że w przypadku sieci opartej wyłącznie o węzły w sieci lokalnej możliwe jest stosowanie tzw. Multicast DNS, który nie potrzebuje żadnego punktu centralnego; w przypadku serwerów posiadających publiczne adresy IP, możliwe staje się użycie list adresów utrzymywanych przez serwery śledzące -- trackery -- oba rozwiązania pozwalają na bezpośredni transport pomiędzy węzłami i nie wymagają zmiany logiki systemu (\cite{discoverylibp2p}).
 
 \subsection{Struktura metadanych}
+\label{sub:metadata}
 
 Metadane przesyłane przy użyciu \texttt{/dhttp/meta/0.1} to podstawa przepływu danych w systemie. Wykorzystywane do budowania wspólnej bazy wiedzy na temat sieci, składać się muszą z lekkich struktur i jasnych komunikatów.
 
@@ -221,22 +203,65 @@ Omówienie zapytań i odpowiedzi jest zawarte w rozdziale \ref{sec:api}.
 
 \subsection{Aplikacja}
 
-\subsection{Przepływy}
-\label{sub:flows}
-% TODO - duuużo rysunków!
+Węzeł \texttt{dHTTP} to aplikacja w node.js, która oprócz \texttt{dhttp.js} i szkieletu \texttt{js-libp2p} wykorzystuje \texttt{http-server} w celu udostępnienia serwera HTTP, pozwalającego na dostęp do binarnych strumieni plików oraz metadanych systemu (statystyk, informacji o węzłach) w formie lekkiego REST API.
 
-\subsection{Cykl życia węzła}
-\label{sub:nodeCycle}
-%  TODO - opisz cykl życia pojedynczego węzła na podstawie udostępnionych przepływów
-
-\subsection{Algorytm transportu danych}
+\subsection{Struktura projektu}
 \label{sec:transportAlgorithm}
-% ccykl "przepływu danych" -- przecięcie protokołu meta i data
+% cykl "przepływu danych" -- przecięcie protokołu meta i data
+Projekt, udostępniony jako \texttt{eng-thesis-node}, posiada następującą strukturę plików:
+\begin{lstlisting}
+    |__ package.json           // 1
+    |__ public
+    |   |__ bundle.js          // 2
+    |__ src
+        |__ browser-bundle.js  // 3
+        |__ create-node.js     // 4
+        |__ dhttp.js           // 5
+        |__ files              // 6
+        |   |__ ...
+        |__ index.js           // 7
+        |__node-setup.js       // 8
+\end{lstlisting}
+
+\begin{enumerate}[noitemsep]
+    \item definicja zależności, sposobu budowania i uruchamiania projektu w środowisku node.js;
+    \item generowany skrypt, akceptowany przez Google Chrome, pozwalający uruchomić dHTTP w przeglądarce;
+    \item plik definiujący moduły libp2p użyte dla węzła;
+    \item skrypt konfigurujący \texttt{js-libp2p-webrtc-star};
+    \item serce dHTTP -- skrypt definiujący funkcjonalności opisane w rozdziale \ref{sec:api};
+    \item domyślny folder przechowywania plików w przetwarzaniu dyskowym;
+    \item główny plik programu; importuje niezbędne klasy i uruchamia serwer http;
+    \item skrypt rejestrujący wydarzenia niezbędne do działania dHTTP z perspektywy \texttt{js-libp2p}.
+\end{enumerate}
+
+\subsection{Cykl życia węzła i algorytm transportu danych}
+\label{sec:transportAlgorithm}
+% cykl "przepływu danych" -- przecięcie protokołu meta i data. Co dzieje się w środku noda.
+W sekcji \ref{sub:metaprotocolMessages} opisano funkcje i komunikaty dostępne w protokole dHTTP. Zaproponowana w tej pracy implementacja węzła realizuje następujący algorytm postępowania:
+
+\begin{enumerate}
+    \item Utwórz węzeł: zacznij akceptować połączenia przy użyciu \texttt{js-libp2p-webrtc-star}, zadeklaruj obsługę protokołów. Zdefiniowane zostają możliwe interakcje. Jeżeli port jest wolny, uruchom serwer HTTP udostępniający API danych dla klienta. \\ \parbox{\linewidth}{\centering \includegraphics[scale=0.6]{nodeHiLevel.pdf}\captionof{figure}{Wizualizacja węzła dHTTP na poziomie sieci.}}
+
+    \item Połącz się z {\em Rendezvous Server}. Prześlij informacje o swoim połączeniu i odbieraj informacje o innych węzłach sieci. \\ \parbox{\linewidth}{\centering \includegraphics[scale=0.45]{node-with-rs-n-neighbors.pdf}\captionof{figure}{Wizualizacja połączenia z {\em Rendezvous Server}, posiadającego dostęp do innych węzłów sieci.}}
+
+    \item Jeśli otrzymasz informacje o innych węzłach, utwórz połączenie z nimi i wymień się metadanymi. \\ \parbox{\linewidth}{\centering \includegraphics[scale=0.45]{node-with-rs-n-neighbors.pdf}\captionof{figure}{Wizualizacja połączenia z {\em Rendezvous Server}, posiadającego dostęp do innych węzłów sieci.}}
+\end{enumerate}
+
+% \subsection{Przepływy}
+% \label{sub:flows}
+% % TODO - duuużo rysunków!
+
+% \subsection{Cykl życia węzła}
+% \label{sub:nodeCycle}
+% %  TODO - opisz cykl życia pojedynczego węzła na podstawie udostępnionych przepływów
+
+
 
 \subsection{Przechowywanie danych}
 \label{sec:dataPropagation}
 
 \subsection{Komunikacja z klientem}
+% TODO -- Narysuj superschemat, w którym reakcje na komunikaty są wynikiem REST API, podobnie z plikami; środek kwestia własna
 
 
 
