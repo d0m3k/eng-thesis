@@ -1,7 +1,7 @@
 \chapter{Testy wydajności}
 \label{cha:testyIOptymalizacje}
 
-W ramach testu systemu skonstruowano stronę testową, która składa się z pięciu wysokiej jakości zdjęć. Łączny rozmiar strony internetowej i zdjęć wynosi 41 MB.
+W ramach testu systemu skonstruowano stronę testową, która składa się z pięciu wysokiej jakości zdjęć. Łączny rozmiar strony internetowej i zdjęć wynosi 39.1 MB.
 
 \begin{figure}[h]
     \centering
@@ -11,7 +11,7 @@ W ramach testu systemu skonstruowano stronę testową, która składa się z pi�
     \label{fig:test-page}
 \end{figure}
 
-W celu oceny wydajności systemu, uruchomiony zostanie serwer \texttt{http} w środowisku node.js, na serwerze znajdującym się w obszarze dostępności US East (Ohio) Amazon Web Services. Przy wykorzystaniu pakietu \texttt{throttle} (\cite{npmThrottle}) możliwe będzie symulowanie ograniczonej przepustowości zarówno serwera końcowego, jak i pojedynczych węzłów sieci dHTTP. Wyniki są uśrednieniem pięciu prób wczytania plików, bez użycia pamięci podręcznej przeglądarki.
+W celu oceny wydajności systemu, uruchomiony zostanie serwer \texttt{http} w środowisku node.js, na instancji EC2 znajdującej się w obszarze dostępności US East (Ohio) Amazon Web Services. Przy wykorzystaniu pakietu \texttt{throttle} (\cite{npmThrottle}) możliwe jest symulowanie ograniczonej przepustowości zarówno serwera końcowego, jak i pojedynczych węzłów sieci dHTTP.
 
 \section{Rezultaty testów}
 \begin{table}[H]
@@ -20,14 +20,18 @@ W celu oceny wydajności systemu, uruchomiony zostanie serwer \texttt{http} w ś
         \hline
          & & \multicolumn{2}{c|}{\textbf{Serwer}} \\ \hline
          & & \textbf{Brak ograniczeń} & \textbf{1 Mbps} \\ \hline
-         \multicolumn{2}{|c|}{\textbf{Brak dHTTP}} & 15.73s & cell2 \\ \hline
-         \multicolumn{2}{|c|}{\textbf{Węzeł lokalny, 0 sąsiadów}} & 15.52s & cell2 \\ \hline \hline
-         \multirow{2}{*}{\textbf{1 sąsiad}} & \textbf{Brak ograniczeń} & 17.31s & cell5 \\ 
-          & \textbf{1 Mbps} & cell9 & cell5 \\  \hline
-         \multirow{2}{*}{\textbf{5 sąsiadów}} & \textbf{Brak ograniczeń} & 12.45s & cell5 \\ 
-          & \textbf{1 Mbps} & cell9 & cell5 \\  \hline
+         \multicolumn{2}{|c|}{\textbf{Brak dHTTP}} & 15.73s & 328.1s \\ \hline
+         \multicolumn{2}{|c|}{\textbf{Węzeł lokalny, 0 sąsiadów}} & 15.52s & 335.2s \\ \hline \hline
+         \textbf{1 sąsiad} & \textbf{Brak ograniczeń} & 16.31s & 18.42s \\ \hline
+         \multirow{2}{*}{\textbf{5 sąsiadów}} & \textbf{Brak ograniczeń} & 14.45s & 15.32s \\ 
+          & \textbf{1 Mbps} & 73.12s & 74.31s \\  \hline
     \end{tabular}
     \label{tab:test-results}
+    \caption{Wyniki są uśrednieniem pięciu prób wczytania plików bez użycia pamięci podręcznej przeglądarki.}
 \end{table}
 
 \section{Wnioski}
+
+Przy pełnej przepustowości sieci efekt działania dHTTP jest niemal niezauważalny (co wynika z nikłego obciążenia węzłów posiadających upload na średnim poziomie 88 Mbps według SpeedTest.net); warto jednak zwrócić uwagę na znaczną poprawę przepustowości przy ograniczonej szybkości oryginalnego serwera -- w tym przypadku, zastosowanie dHTTP zaowocowało przyrostem szybkości na poziomie 442\% względem pobierania bez wsparcia pięciu węzłów sąsiedzkich.
+
+Warto zwrócić również uwagę na perspektywę optymalizacji systemu -- w przypadku braku ograniczeń łącza serwera, ale pięciu węzłów o przepustowości 1Mbps, szybkość transferu jest znacznie niższa, niż gdyby użytkownik użył oryginalnego serwera. Uwzględnienie metryki średniej szybkości łącza węzłów dHTTP mogłoby pozytywnie wpływać na klientów wyposażonych w szerokopasmowe połączenie. 
