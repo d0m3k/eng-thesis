@@ -41,6 +41,8 @@ W celu uniknięcia niejednoznaczności w dalszym toku pracy, zdefiniowane zostan
 
 Z punktu widzenia klastra, koncepty węzła i klienta są jednoznaczne i równorzędne -- wszystkie wyposażone są we wspólne mechanizmy komunikacji, i protokół wymiany danych między nimi działa na niezmienionej zasadzie. Wspólnie budować będą rozproszoną tablicę haszującą (DHT), która pozwoli na dostęp do metadanych klastra informujących o cechach poszczególnych węzłów oraz metadanych plików, przyspieszając proces ich identyfikacji i zapewniając bezpieczeństwo oraz spójność danych.
 
+% TODO -- trzeba przenieść ideę reputacji do rozdziałów konceptualnych
+
 W celu zapewnienia płynności działania systemu, metadane klastra powinny zawierać w sobie informacje o {\em reputacji} poszczególnych węzłów. Podczas gdy węzły serwerowe z reguły zostają uruchomione i będą działać, mając szczyty obciążenia czy wymagań zależne głównie od obciążenia całej sieci (lub ewentualnego alternatywnego oprogramowania serwerowego na nich uruchamianego), węzły klienckie podlegać będą prawdopodobnie o wiele większej dynamice, z racji licznych odczytów dużych plików i podejścia użytkownika, które może zakładać częste otwieranie i zamykanie przeglądarki.
 
 Węzły serwerowe i klienci powinny mieć zatem różne wartości bazowe przy ocenie ich sprawności w sieci -- reputacja oprogramowania klienckiego powinna być domyślnie niższa, i szybciej reagować na zmiany jej wartości.
@@ -135,7 +137,7 @@ Powyższy przykład, stanowiący część kodu dHTTP, pokazuje istotny koncept {
 Podkreślić należy również pozytywny wpływ strumieni na wydajność -- ta abstrakcja pozwala operować na plikach przy użyciu buforów w sposób przezroczysty: przykładowo, aby wysłać duży obrazek nie przechowując go w całości w pamięci, wystarczy utworzyć strumień pliku i przepotokować go do strumienia wyjściowego.
 
 \begin{lstlisting}[language=javascript]
-    var fileStream =  fs.createReadStream('files/caviar.jpg');
+    var fileStream =  fs.createReadStream(filePath);
     fileStream.pipe(connStream)
     //kiedy strumień pliku się zakończy, nastąpi zamknięcie połączenia aby poinformować odbiorcę, że nic już na niego nie czeka
     fileStream.on('finish', ()=> connStream.close())
@@ -197,6 +199,8 @@ Podstawowe zapytanie \texttt{/dhttp/meta/0.1} wygląda następująco:
 
 Omówienie zapytań i odpowiedzi jest zawarte w rozdziale \ref{sec:api}.
 
+% TODO -- lekki rozdział o danych-danych
+
 \input{section_API}
 
 \section{Węzeł \texttt{dHTTP}}
@@ -234,7 +238,7 @@ Projekt, udostępniony jako \texttt{eng-thesis-node}, posiada następującą str
     \item skrypt rejestrujący wydarzenia niezbędne do działania dHTTP z perspektywy \texttt{js-libp2p}.
 \end{enumerate}
 
-\subsection{Cykl życia węzła i algorytm transportu danych}
+\subsection{Cykl życia węzła}
 \label{sec:transportAlgorithm}
 % cykl "przepływu danych" -- przecięcie protokołu meta i data. Co dzieje się w środku noda.
 W sekcji \ref{sub:metaprotocolMessages} opisano funkcje i komunikaty dostępne w protokole dHTTP. Zaproponowana w tej pracy implementacja węzła realizuje następujący algorytm postępowania:
@@ -266,14 +270,36 @@ Jednym z bardziej złożonych problemów konceptu dHTTP jest kwestia przechowywa
 
 Naiwne podejścia -- przechowywanie wszystkich plików na wszystkich węzłach, lub rozkładanie ich tak, aby w sieci istniał tylko jeden węzeł z danym dokumentem -- wiążą się z oczywistymi problemami: prowadzą do skrajnego przeciążenia pamięciowego w pierwszym przypadku i ryzyka dużego obciążenia pojedynczych węzłów w drugim. 
 
-Ta sekcja proponuje kilka rozwiązań starających się znaleźć kompromis pomiędzy pamięciową złożonością sieci, a możliwością zapewniania plików przez proporcjonalną do obciążenia sieci ilość węzłów.
+Poniżej zaproponowano kilka rozwiązań starających się znaleźć kompromis pomiędzy pamięciową złożonością sieci, a możliwością zapewniania plików przez proporcjonalną do obciążenia sieci ilość węzłów.
 
+\subsubsection{Rozwiązanie czasu rzeczywistego}
+Ideą rozwiązania jest udostępnianie plików przez dany węzeł tak długo, jak długo strona je serwująca znajduje się na ekranie klienta. Z racji swojej charakterystyki, rozwiązanie to można wykorzystać tylko na węzłach klienckich.
 
+Zaletą jest małe obciążenie pamięciowe dla zadanego węzła i brak specjalnych metryk współdzielonych między węzłami.
+Wadą -- potencjalny mały wpływ danego klienta na propagację danych w sieci, zakładając częste zmienianie wyświetlanych stron i zamykanie kart.
+
+\subsubsection{Popularność}
+To rozwiązanie polegało na serwowaniu zasobów pobranych na podstawie popularity index zawartego w sieci.
+
+Sieć propagowałaby informacje o popularności danych stron, a pojedyncze węzły na podstawie tych informacji podejmowałyby decyzje o priorytetyzacji pobierania konkretnych plików.
+
+Zaletą rozwiązania jest możliwość wykorzystania istniejących indeksów -- jeśli sieć będzie w początkowej fazie mała, optymalizacja typowego wykorzystania będzie możliwa dzięki zaimportowaniu zdefiniowanej listy stron, i wykorzystanie {\em web crawlingu} do pobrania ich zasobów przed propagacją danych o popularności wewnątrz samej sieci. Należy jednak zauważyć, że to rozwiązanie wymaga propagacji informacji o popularności plików między węzłami.
+
+\subsubsection{Opóźnienia}
+Rozwiązanie oparte na opóźnieniach może prowadzić do dobrych efektów w sieciach o niskiej przepustowości.
+
+Idea systemu badającego opóźnienia polega na badaniu jak długo trwa typowe zapytanie o dany zasób w momencie czasu; jeżeli ta wartość jest wysoka, można założyć, że dane serwery lub węzły dHTTP są znacznie obciążone, i należy rozpropagować ich dane.
+
+Idea ta jest najbardziej złożona algorytmicznie: należałoby przechwytywać informacje o czasach reakcji, a następnie propagować je pośród całej sieci. Uwzględnić trzeba również dynamikę ruchu internetowego -- szczyt popularności danej strony może trwać krótki czas, dane o opóźnieniach musiałyby zatem być propagowane i przechowywane w sposób tę dynamikę uwzględniający.
+
+\subsubsection{Propagacja na podstawie zapytań}
+Idea propagacji na podstawie zapytań proponuje proste rozwiązanie -- jeżeli dany węzeł zostanie zapytany o zasób i nie będzie go posiadał, zgodnie z algorytmem przedstawionym w sekcji \ref{sec:transportAlgorithm} przekieruje użytkownika do innego węzła sieci lub przekaże mu zasób bezpośrednio z serwera; robiąc to jednak, zainicjuje pobranie danego pliku u siebie, rozszerzając zasięg sieci i umożliwiając pobieranie pliku od siebie w przyszłości.
+
+Prostota tego rozwiązania
 
 
 \subsection{Komunikacja z klientem}
 % TODO -- Narysuj superschemat, w którym reakcje na komunikaty są wynikiem REST API, podobnie z plikami; środek kwestia własna
-
 
 
 
@@ -285,3 +311,4 @@ Ta sekcja proponuje kilka rozwiązań starających się znaleźć kompromis pomi
 
 
 
+%  TODO - cite 'http' client somewhere (over the rainbow)
