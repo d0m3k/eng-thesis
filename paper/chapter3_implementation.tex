@@ -239,12 +239,14 @@ Projekt, udostępniony jako \texttt{eng-thesis-node}, posiada następującą str
 % cykl "przepływu danych" -- przecięcie protokołu meta i data. Co dzieje się w środku noda.
 W sekcji \ref{sub:metaprotocolMessages} opisano funkcje i komunikaty dostępne w protokole dHTTP. Zaproponowana w tej pracy implementacja węzła realizuje następujący algorytm postępowania:
 
-\begin{enumerate}
+\begin{enumerate}[noitemsep]
     \item Utwórz węzeł: zacznij akceptować połączenia przy użyciu \texttt{js-libp2p-webrtc-star}, zadeklaruj obsługę protokołów. Zdefiniowane zostają możliwe interakcje. Jeżeli port jest wolny, uruchom serwer HTTP udostępniający API danych dla klienta. \\ \parbox{\linewidth}{\centering \includegraphics[scale=0.6]{nodeHiLevel.pdf}\captionof{figure}{Wizualizacja węzła dHTTP na poziomie sieci.}}
 
     \item Połącz się z {\em Rendezvous Server}. Prześlij informacje o swoim połączeniu i odbieraj informacje o innych węzłach sieci. \\ \parbox{\linewidth}{\centering \includegraphics[scale=0.45]{node-with-rs-n-neighbors.pdf}\captionof{figure}{Wizualizacja połączenia z {\em Rendezvous Server}, posiadającego dostęp do innych węzłów sieci.}}
 
-    \item Jeśli otrzymasz informacje o innych węzłach, utwórz połączenie z nimi i wymień się metadanymi. \\ \parbox{\linewidth}{\centering \includegraphics[scale=0.45]{node-with-rs-n-neighbors.pdf}\captionof{figure}{Wizualizacja połączenia z {\em Rendezvous Server}, posiadającego dostęp do innych węzłów sieci.}}
+    \item Jeśli otrzymasz informacje o innych węzłach, utwórz z nimi połączenie i wymień się metadanymi. 
+
+    \item Utrzymując otwarte połączenia z węzłami i uruchomiony serwer HTTP, odpowiadaj na zapytania protokołów \texttt{/dhttp/data/0.1} oraz \texttt{/dhttp/meta/0.1} i propaguj informacje zmianach zgodnie z \ref{sec:events}. \\ \parbox{\linewidth}{\centering \includegraphics[scale=0.5]{communication-flow.pdf}\captionof{figure}{Wizualizacja wirtualnych połączeń między węzłami i interakcji z klientem przy użyciu API HTTP.}}
 \end{enumerate}
 
 % \subsection{Przepływy}
@@ -257,8 +259,17 @@ W sekcji \ref{sub:metaprotocolMessages} opisano funkcje i komunikaty dostępne w
 
 
 
-\subsection{Przechowywanie danych}
+\subsection{Przechowywanie i propagacja danych}
 \label{sec:dataPropagation}
+
+Jednym z bardziej złożonych problemów konceptu dHTTP jest kwestia przechowywania i rozpraszania plików w sieci.
+
+Naiwne podejścia -- przechowywanie wszystkich plików na wszystkich węzłach, lub rozkładanie ich tak, aby w sieci istniał tylko jeden węzeł z danym dokumentem -- wiążą się z oczywistymi problemami: prowadzą do skrajnego przeciążenia pamięciowego w pierwszym przypadku i ryzyka dużego obciążenia pojedynczych węzłów w drugim. 
+
+Ta sekcja proponuje kilka rozwiązań starających się znaleźć kompromis pomiędzy pamięciową złożonością sieci, a możliwością zapewniania plików przez proporcjonalną do obciążenia sieci ilość węzłów.
+
+
+
 
 \subsection{Komunikacja z klientem}
 % TODO -- Narysuj superschemat, w którym reakcje na komunikaty są wynikiem REST API, podobnie z plikami; środek kwestia własna
