@@ -18,7 +18,7 @@ Projekt udostępnia interfejs zapewniający dostęp do statystyk, a także prefe
 \end{figure}
 
 % TODO - gdzieś w pracy podkreśl, jak bardzo istotna jest prosta i automatyczna klastryzacja
-Wymogiem dla projektu, koniecznym z racji potrzeby prostej automatyzacji rozrostu sieci, jest tryb niezależny aplikacji -- {\em headless mode} -- pozwalający na wystartowanie niezależnego węzła jednym poleceniem. Niezbędnym jest, aby węzeł tego typu udostępniał statystyki użycia i wstępną konfigurację przy użyciu poleceń interfejsu konsolowego, pozwalając jednak na funkcjonalne uruchomienie z domyślną konfiguracją.
+Wymogiem dla projektu, koniecznym z racji potrzeby prostej automatyzacji rozrostu sieci, jest tryb niezależny aplikacji -- {\em headless mode} -- pozwalający na wystartowanie niezależnego węzła jednym poleceniem. Istotnym jest, aby węzeł tego typu udostępniał statystyki użycia i wstępną konfigurację przy użyciu poleceń interfejsu konsolowego, pozwalając jednak na funkcjonalne uruchomienie z domyślną konfiguracją.
 
 
 \section{Definicje, architektura i technologie}
@@ -39,7 +39,7 @@ W celu uniknięcia niejednoznaczności w dalszym toku pracy, zdefiniowane zostan
 
 \subsection{Koncept architektury}
 
-Z punktu widzenia klastra, koncepty węzła i klienta są jednoznaczne i równorzędne -- wszystkie wyposażone są we wspólne mechanizmy komunikacji, i protokół wymiany danych między nimi działa na niezmienionej zasadzie. Wspólnie budować będą rozproszoną tablicę haszującą (DHT), która pozwoli na dostęp do metadanych klastra, które informować będą o cechach poszczególnych węzłów, oraz metadanych plików, przyspieszając proces ich identyfikacji i zapewniając oraz bezpieczeństwo spójność danych.
+Z punktu widzenia klastra, koncepty węzła i klienta są jednoznaczne i równorzędne -- wszystkie wyposażone są we wspólne mechanizmy komunikacji, i protokół wymiany danych między nimi działa na niezmienionej zasadzie. Wspólnie budować będą rozproszoną tablicę haszującą (DHT), która pozwoli na dostęp do metadanych klastra informujących o cechach poszczególnych węzłów oraz metadanych plików, przyspieszając proces ich identyfikacji i zapewniając bezpieczeństwo oraz spójność danych.
 
 W celu zapewnienia płynności działania systemu, metadane klastra powinny zawierać w sobie informacje o {\em reputacji} poszczególnych węzłów. Podczas gdy węzły serwerowe z reguły zostają uruchomione i będą działać, mając szczyty obciążenia czy wymagań zależne głównie od obciążenia całej sieci (lub ewentualnego alternatywnego oprogramowania serwerowego na nich uruchamianego), węzły klienckie podlegać będą prawdopodobnie o wiele większej dynamice, z racji licznych odczytów dużych plików i podejścia użytkownika, które może zakładać częste otwieranie i zamykanie przeglądarki.
 
@@ -53,17 +53,17 @@ Budowa kompletnego stosu technologicznego dla projektu o takich wymaganiach prze
 
 Dużą zmianą w tej kwestii jest rozwój \texttt{libp2p}, stanowiący efekt długotrwałej pracy nad zrozumieniem stosu sieciowego Internetu, zbiór protokołów i wyprowadzonych zeń narzędzi, mechanik i interfejsów, pozwalających na ich podstawie budować własne, kompleksowe rozwiązania (\cite{libp2p-specs}).
 
-\texttt{libp2p} stanowi względnie wysokopoziomową kanwę dla projektu dHTTP. To właśnie na efektach pracy tego projektu opiera się warstwa tworzenia i komunikacji węzłów, budująca klaster dHTTP. Implementacja \texttt{js-libp2p} udostępnia moduły niezbędne w komunikacji sieciowej, łączeniu strumieni różnych protokołów, wykrywaniu nowych węzłów, propagowaniu informacji o istniejących węzłach sieci czy wreszcie budowaniu rozproszonej tablicy haszującej, stanowiącej bazę metadanych klastra i plików.
+\texttt{libp2p} stanowi względnie wysokopoziomową kanwę dla projektu dHTTP. To właśnie na efektach pracy tego projektu opiera się warstwa tworzenia i komunikacji węzłów, budująca klaster dHTTP. Implementacja \texttt{js-libp2p} udostępnia moduły niezbędne w komunikacji sieciowej, łączeniu strumieni różnych protokołów, wykrywaniu nowych węzłów, propagowaniu informacji o stanie sieci czy wreszcie budowaniu rozproszonej tablicy haszującej, stanowiącej bazę metadanych klastra i plików.
 
 Nie bez wpływu pozostaje rozwój przeglądarek internetowych. Współczesne browsery udostępniają kompleksowe API, pozwalające rozwijać wtyczki zmieniające zawartość stron internetowych, z uwzględnieniem kwestii wydajności i bezpieczeństwa. Istotne jest również wsparcie dla nowych technik komunikacji takich jak {\em WebSockets}, pozwalającej na wymianę informacji w czasie rzeczywistym, dzięki utrzymywaniu dwustronnie interaktywnej sesji TCP pomiędzy przeglądarką i serwerem. W ramach tej pracy rozwinięta została wtyczka dla przeglądarki Google Chrome. Wybór ten podyktowany został znaczną przewagą Chrome -- w chwili pisania tej pracy, udział Chrome w rynku przeglądarek na komputerach osobistych wynosił ponad 64\% (\cite{chromeStats}). Prace i testy przeprowadzono przy użyciu 64-bitowego Google Chrome w wersji 63.0, na platformie macOS w wersji 10.13.2.
 % TODO cite https://developer.chrome.com/extensions lub bardziej specyficznie.
 
-Za powstanie {\em headless} dHTTP w znacznej części odpowiada Node.js -- środowisko uruchomieniowe pozwalające na uruchamianie kodu JavaScript po stronie serwerowej.  Narzędzia, takie jak \texttt{npm} i Browserify, pozwalają z kolei na wykorzystywanie serwerowego kodu JavaScriptu w kodzie klienckim. Dzięki możliwości rozwoju obu aplikacji przy użyciu tego samego języka programowania i powyższym rozwiązaniom, znaczna część  kodu aplikacji może być współdzielona. {\em headless} dHTTP testowane było przy użyciu \texttt{node} w wersji v8.9.1, na platformie macOS oraz Amazon Linux AMI.
+Za powstanie {\em headless} dHTTP w znacznej części odpowiada Node.js -- środowisko uruchomieniowe pozwalające na uruchamianie kodu JavaScript po stronie serwerowej.  Narzędzia, takie jak \texttt{npm} i Browserify, pozwalają z kolei na wykorzystywanie serwerowego kodu JavaScriptu w kodzie klienckim. Dzięki możliwości rozwoju obu aplikacji przy użyciu tego samego języka programowania i powyższym rozwiązaniom, znaczna część  kodu aplikacji może być współdzielona. {\em Headless} dHTTP testowane było przy użyciu \texttt{node} w wersji v8.9.1, na platformie macOS oraz Amazon Linux AMI.
 
 % Języki programowania nie były zaadaptowane do prostej komunikacji sieciowej, a przeglądarki nie wspierały krytycznych narzędzi i protokołów pozwalających na komunikację w czasie rzeczywistym, pozostawiając problemy natury wydajnościowej uniemożliwiające użyteczną implementację tego typu rozwiązań.
 
 \subsection{Paradygmaty i koncepcje}
-Istotą projektu dHTTP jest reagowanie na zapytania i komunikacja pomiędzy węzłami. Ponadto, projekt działać będzie w środowisku JavaScriptowym -- język ten (poza web workers -- rozwiązaniem polegającymi na delegacji obliczeń do wydzielonego środowiska, patrz: \cite{webWorkers}) uruchamiany jest jednowątkowo. W klasycznym podejściu do programowania może to powodować problemy związane z blokowaniem się wydarzeń; jest to dotkliwe zwłaszcza w przypadku interfejsów użytkownika, które w takiej sytuacji tracą responsywność. Poniżej znajduje się omówienie związanym z tych praktyk, które stosowane są w projekcie dHTTP.
+Istotą projektu dHTTP jest reagowanie na zapytania i komunikacja pomiędzy węzłami. Ponadto, projekt działać będzie w środowisku JavaScriptowym -- język ten (poza web workers -- rozwiązaniem polegającymi na delegacji obliczeń do wydzielonego środowiska, patrz: \cite{webWorkers}) uruchamiany jest jednowątkowo. W podejściu proceduralnym może to powodować problemy związane z blokowaniem się wydarzeń; jest to dotkliwe zwłaszcza w przypadku interfejsów użytkownika, które w takiej sytuacji tracą responsywność. Poniższe sekcje zawierają omówienie związanym z tych praktyk, stosowanych w projekcie dHTTP.
 % TODO - podkreśl jak pozytywny wpływ ma to wszystko na sposób pisania dHTTP
 
 \subsubsection{Asynchroniczność}
@@ -81,15 +81,17 @@ Podstawowym rozwiązaniem stosowanym w języku JavaScript, pozwalającym na wyko
 
 W powyższym przykładzie warto zauważyć, że wywołanie \texttt{console.log(...)} będzie miało miejsce natychmiast po zawołaniu funkcji foo -- jest więc bardzo prawdopodobnym, że efekt jego pracy widoczny będzie przed zawołaniem funkcji \texttt{callback}.
 
-Asynchroniczne odwołania są kluczowe w przypadku wydarzeń takich jak oczekiwanie na odpowiedź serwera; czekając na odpowiedź, możemy kontynuować tok życia programu.
+Asynchroniczne odwołania są kluczowe w przypadku wydarzeń takich jak oczekiwanie na odpowiedź serwera; czekając, program może wykonywać następne polecenia, a reakcja na odpowiedź zostanie wpleciona w tok pracy aplikacji.
 
 \subsubsection{Event-driven architecture}
-Pozioma oś modelu współbieżności JavaScriptu zapewnia natywne wsparcie dla reakcji na wydarzenia. W celu nasłuchiwania wydarzenia, zarejestrować jego obserwatora ({\em listener}) stosując z reguły składnię zbliżoną do:
+Pozioma oś modelu współbieżności JavaScriptu zapewnia natywne wsparcie dla reakcji na wydarzenia. W celu nasłuchiwania wydarzenia, należy zarejestrować jego obserwatora ({\em listener}) stosując z reguły składnię zbliżoną do:
 \begin{lstlisting}[language=javascript]
     a.addEventListener('click', ()=> {
         console.log('Button clicked!')
     })
 \end{lstlisting}
+
+W powyższym przykładzie, widać rejestrację reakcji na kliknięcie w przycisk. Jeżeli dana sytuacja nastąpi, wiadomość wysłana zostanie na kolejkę, co w momencie jej napotkania doprowadzi do wrzucenia na stos zarejestrowanej funkcji.
 
 \begin{figure}[h]
 
@@ -104,38 +106,38 @@ Pozioma oś modelu współbieżności JavaScriptu zapewnia natywne wsparcie dla 
 \subsubsection{Strumienie}
 % i potoki
 
-Node.js przeniósł języki, którego dotychczasowym targetem były lekkie rozwiązania klienckie, na poziom serwerowy, w którym niektóre operacje są długotrwałe, mają przerwy w wywołaniach i nierzadko wymagają informowania o postępach (przykładem może być utrzymanie połączenia sieciowego, czy odczyt standardowego wyjścia) Choć jest możliwym implementacja tego typu rozwiązań  wywołaniami zwrotnymi, czytelność drastycznie spada.
+Node.js przeniósł środowisko JavaScript, którego dotychczasowym targetem były lekkie rozwiązania klienckie, na poziom serwerowy, w którym niektóre operacje są długotrwałe, mają przerwy w wywołaniach i nierzadko wymagają informowania o postępach (przykładem może być utrzymanie połączenia sieciowego, czy odczyt standardowego wyjścia). Choć jest możliwym implementacja tego typu rozwiązań  wywołaniami zwrotnymi, czytelność i utrzymywalność takiego kodu drastycznie spada -- przepływ logiki programu staje się trudny do wyśledzenia.
 
-Z pomocą przychodzą strumienie (\cite{nodeStreamAPI}). Strumienie nakładają abstrakcję, która pozwala intuicyjnie czytać (dla strumieni \texttt{Readable}) wrzucać (w przypadku \texttt{Writable}), a także transformować (\texttt{Transform}) wartości przekazywane w strumieniu.
+Z pomocą przychodzą strumienie (\cite{nodeStreamAPI}). Strumienie nakładają abstrakcję, która pozwala intuicyjnie czytać (dla strumieni \texttt{Readable}) wrzucać (w przypadku \texttt{Writable}), a także transformować (\texttt{Transform}) przekazywane wartości.
 
 \begin{lstlisting}[language=javascript]
 // Przykład nawiązywania połączenia w metaprotokole dHTTP
 dhttpClient.node.dial(peerInfo, '/dhttp/meta/0.1', (err, connStream) => {
     // connStream to przykład strumienia Duplex - pozwala zarówno na zapis, jak i odczyt.
-    // zapisz coś do connStream...
+    // zapis do connStream
     connStream.write("Let's talk")
-    // jeśli w strumieniu pojawią się dane, wywołaj callback. Warto zauważyć, że to wywołanie może nastąpić zarówno przed, jak i po zawołaniu write -- zależy od stanu strumienia, który może otrzymywać dane w innych miejscach programu
+    // jeśli w strumieniu pojawią się dane, nastąpi wywołanie funkcji callback. Warto zauważyć, że to wywołanie może nastąpić zarówno przed, jak i po zawołaniu write -- zależy od stanu strumienia, który może otrzymywać dane w innych miejscach programu
     connStream.on('data', (data) => {
         callback(JSON.parse(data))
     })
 }
 
 
-// Przykład uruchamiania serwera HTTP dzięki 'http-server'
+// Przykład uruchamiania serwera HTTP w node.js dzięki 'http-server'
 http.createServer((req, res) => {
-    // Przekaż wartość strumienia req strumieniowi request, który następnie zostanie przekazany do res. W efekcie zadziałamy jako najprostsze proxy - otrzymamy dane o oryginalnym zapytaniu, wywołamy je z punktu widzenia serwera, i przekażemy wynik w ramach odpowiedzi.
+    // Przekazanie strumienia req strumieniowi request, który następnie zostanie przekazany do res. W efekcie zadziałamy jako najprostsze proxy - otrzymamy dane o oryginalnym zapytaniu, wywołamy je z punktu widzenia serwera, i przekażemy wynik w ramach odpowiedzi.
     req.pipe(request(req.url)).pipe(res)
 }).listen(34887)
 \end{lstlisting}
 
-Powyższy przykład, stanowiący część kodu dHTTP, pokazuje istotny koncept {\em potoków} (ang. {\em pipe}). Potoki pozwalają łączyć strumienie w sposób analogiczny do strumieni znanych z systemów Uniksowych: odczytane wartości można przekazać kolejnemu strumieniowi, który może zamienić je na inne wartości, aż w końcu zapiszemy wynik pracy w strumieniu odpowiedzi. Tego typu operacje stanowią kanwę przemian stosowanych w dHTTP.
+Powyższy przykład, stanowiący część kodu dHTTP, pokazuje istotny koncept {\em potoków} (ang. {\em pipe}). Potoki pozwalają łączyć strumienie w sposób analogiczny do strumieni znanych z systemów Uniksowych: odczytane wartości można przekazać kolejnemu strumieniowi, który może zamienić je na inne wartości, aż w końcu wynik pracy zostanie zapisany w strumieniu odpowiedzi. Tego typu operacje stanowią kanwę przemian stosowanych w dHTTP.
 
 Podkreślić należy również pozytywny wpływ strumieni na wydajność -- ta abstrakcja pozwala operować na plikach przy użyciu buforów w sposób przezroczysty: przykładowo, aby wysłać duży obrazek nie przechowując go w całości w pamięci, wystarczy utworzyć strumień pliku i przepotokować go do strumienia wyjściowego.
 
 \begin{lstlisting}[language=javascript]
     var fileStream =  fs.createReadStream('files/caviar.jpg');
     fileStream.pipe(connStream)
-    //kiedy strumień pliku się zakończy, zamknij połączenie aby poinformować odbiorcę, że nic już na niego nie czeka
+    //kiedy strumień pliku się zakończy, nastąpi zamknięcie połączenia aby poinformować odbiorcę, że nic już na niego nie czeka
     fileStream.on('finish', ()=> connStream.close())
 \end{lstlisting}
 
@@ -165,7 +167,7 @@ Podstawę logiki systemu stanowi plik \texttt{dhttp.js}. Jest on interfejsem ł�
 \texttt{dhttp.js} operuje na dwóch protokołach:
 
 \begin{itemize}
-    \item \texttt{/dhttp/meta/0.1} -- {\em metaprotokół}, stanowi podstawę szkieletu systemu dHTTP. Informuje o dostępnych węzłach i plikach, obciążeniu sieci, a także następujących na bieżąco zmianach. Konwencją podjętą dla {\em metaprotokołu} jest powszechna propagacja danych -- przykładowo, jeśli łączę się z nowym węzłem, powinienem wysłać mu listę posiadanych przeze mnie plików, a jeśli planuję opuścić sieć, powinienem poinformować o tym wszystkich podłączonych sąsiadów. Dzięki temu podejściu każdy węzeł posiada zbiór informacji na temat otoczenia, pozwalający na szybsze podejmowanie decyzji.
+    \item \texttt{/dhttp/meta/0.1} -- {\em metaprotokół}, stanowi podstawę szkieletu systemu dHTTP. Informuje o dostępnych węzłach i plikach, obciążeniu sieci, a także następujących na bieżąco zmianach. Konwencją podjętą dla {\em metaprotokołu} jest powszechna propagacja danych -- przykładowo, jeśli następuje połączenie z nowym węzłem,  należy wysłać mu listę posiadanych plików, a jeśli planowane jest opuszczenie sieci, trzeba poinformować o tym fakcie podłączonych sąsiadów. Dzięki temu podejściu każdy węzeł posiada zbiór informacji na temat otoczenia, pozwalający na szybsze podejmowanie decyzji.
 
     \item \texttt{/dhttp/data/0.1} -- {\em protokół danych}, stanowi system przesyłu docelowych plików w dHTTP. Zorientowany strumieniowo, przesyła zgromadzone pliki w ich oryginalnym formacie. Może zostać rozszerzony o obsługę zapytań cząstkowych -- tak, aby duże pliki pobierać częściami od swoich sąsiadów.
 \end{itemize}
@@ -175,10 +177,10 @@ Ponadto, \texttt{dhttp.js} wykorzystuje wbudowane {\em mechanizmy odkryć} \text
 % tutaj bardzo duże wypisanie wszystkich szczegółów jakie dają protokoły, z rysunkami i wszyściutkim
 
 \subsection{Warstwa sieciowa}
-Warto zaznaczyć, że rozwiązania opisywane w powyższej sekcji jako {\em protokół} są wysokopoziomową nakładką na warstwę sieciową. Jak zatem węzły sieci nawiązują połączenie?
+Warto zaznaczyć, że rozwiązania opisywane w powyższej sekcji jako {\em protokół} są wysokopoziomową nakładką na warstwę sieciową. Jak zatem węzły nawiązują połączenie?
 % rozwinąć wątek NAT-u
 
-Połączenia w sieci peer-to-peer są znacznie utrudnione przez \textbf{ Network Address Translation} (NAT). NAT jest techniką stosowaną przez routery, polegającą na zmianie adresów i portów IP w toku przesyłu danych w celu udostępnienia węzłom sieci prywatnych dostęp do internetu przy użyciu jednego adresu. Gdy użytkownik za „maskaradą” (jak bywa określany NAT) wykonuje zapytania, serwery widzą adres IP pierwszego routera, który posiada publiczny adres sieciowy. Odpowiedzi są możliwe dzięki informacjom przechowywanym przez routery prowadzące ten typ komunikacji.
+Połączenia w sieci peer-to-peer są znacznie utrudnione przez \textbf{ Network Address Translation} (NAT). NAT jest techniką stosowaną przez routery, polegającą na zmianie adresów i portów IP w toku przesyłu danych w celu udostępnienia węzłom sieci prywatnych dostępu do internetu przy użyciu jednego adresu. Gdy użytkownik za „maskaradą” (jak bywa określany NAT) wykonuje zapytania, serwery widzą adres IP pierwszego routera, który posiada publiczny adres sieciowy. Odpowiedzi są możliwe dzięki informacjom przechowywanym przez routery prowadzące ten typ komunikacji.
 
 Jest to konieczność w obliczu wyczerpanej puli adresów IPv4, prowadzi jednak do sytuacji, w której otwarcie bezpośredniego łącza pomiędzy dwoma użytkownikami końcowymi jest z reguły niemożliwe -- nie ma możliwości odpytania adresu IP końcowego komputera.
 
@@ -195,7 +197,7 @@ W celu poradzenia sobie z tym problemem, dHTTP wykorzystuje bibliotekę \texttt{
 
 Niestety, stawia to pod znakiem zapytania rozproszenie systemu -- jak widać na rys. \ref{fig:webrtc-star}, obecnie system przypomina bardziej scentralizowaną topologię gwiazdy niż system faktycznie rozproszony. Obciąża też {\em Rendezvous Server} koniecznością przekazywania treści. Jest to jednak rozwiązanie przejściowe i na chwilę obecną konieczne -- \texttt{js-libp2p} w czasie tworzenia tego projektu nie udostępnia innych metod trawersowania NAT-u.
 
-Warto dodać, że w przypadku sieci opartej wyłącznie o węzły w sieci lokalnej możliwe jest stosowanie tzw. Multicast DNS, który nie potrzebuje żadnego punktu centralnego; w przypadku serwerów posiadających publiczne adresy IP, możliwe staje się użycie list adresów utrzymywanych przez trackery -- oba rozwiązania pozwalają na bezpośredni transport pomiędzy węzłami i nie wymagają zmiany logiki systemu (\cite{discoverylibp2p}).
+Warto dodać, że w przypadku sieci opartej wyłącznie o węzły w sieci lokalnej możliwe jest stosowanie tzw. Multicast DNS, który nie potrzebuje żadnego punktu centralnego; w przypadku serwerów posiadających publiczne adresy IP, możliwe staje się użycie list adresów utrzymywanych przez serwery śledzące -- trackery -- oba rozwiązania pozwalają na bezpośredni transport pomiędzy węzłami i nie wymagają zmiany logiki systemu (\cite{discoverylibp2p}).
 
 \subsection{Struktura metadanych}
 
@@ -207,17 +209,13 @@ Podstawowe zapytanie \texttt{/dhttp/meta/0.1} wygląda następująco:
     {
         type: "echo",
         peerId: dhttpClient.node.peerInfo.id.toB58String(),
-        text: "Hello, fellow node."
+        text: "Hello, node."
     }
 \end{lstlisting}
 
-% \subsection{Dostępne komunikaty metaprotokołu}
+Omówienie zapytań i odpowiedzi jest zawarte w rozdziale \ref{sec:api}.
 
-% TODO -- tę sekcję zdecydowanie należy napisać i dobrze rozwinąć, ale gdzie powinna być umieszczona?
 \input{section_API}
-
-
-
 
 \section{Węzeł \texttt{dHTTP}}
 
@@ -232,6 +230,7 @@ Podstawowe zapytanie \texttt{/dhttp/meta/0.1} wygląda następująco:
 %  TODO - opisz cykl życia pojedynczego węzła na podstawie udostępnionych przepływów
 
 \subsection{Algorytm transportu danych}
+\label{sec:transportAlgorithm}
 % ccykl "przepływu danych" -- przecięcie protokołu meta i data
 
 \subsection{Przechowywanie danych}
