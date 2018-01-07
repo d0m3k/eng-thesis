@@ -295,38 +295,41 @@ Idea ta jest najbardziej złożona algorytmicznie: należałoby przechwytywać i
 \subsubsection{Propagacja na podstawie zapytań}
 Idea propagacji na podstawie zapytań proponuje proste rozwiązanie -- jeżeli dany węzeł zostanie zapytany o zasób i nie będzie go posiadał, zgodnie z algorytmem przedstawionym w sekcji \ref{sec:transportAlgorithm} przekieruje użytkownika do innego węzła sieci lub przekaże mu zasób bezpośrednio z serwera; robiąc to jednak, zainicjuje pobranie danego pliku u siebie, rozszerzając zasięg sieci i umożliwiając pobieranie pliku od siebie w przyszłości.
 
-Z racji prostoty tego rozwiązania, przy jego jednoczesnym wpływie na dynamikę sieci i łatwości testowania, zostało ono zaimplementowane w projekcie \texttt{dhttp-node}.
-
 \section{Klient \texttt{dHTTP}}
-Idea lekkiego klienta będącego wtyczką do Google Chrome -- udostępnia możliwość korzystania z sieci dHTTP dla zdefiniowanych typów zasobów, wykorzystując jako punkt wejścia wybrany węzeł sieci.
+Lekki klient będący wtyczką do Google Chrome udostępnia możliwość korzystania z sieci dHTTP dla zdefiniowanych typów zasobów, wykorzystując jako punkt wejścia wybrany węzeł sieci.
 
-Wtyczka wykorzystuje udostępniane przez Google Chrome Extension API \texttt{chrome.webRequest} (\cite{webRequestAPI}), pozwalające na operację podmiany adresu zapytania zanim zostanie ono wysłane na serwer; dzięki temu możliwe są przekierowania dla zasobów niewymagające modyfikacji DOM-u stron internetowych, uwzględniające także asynchroniczne zapytania AJAX.
+Wtyczka wykorzystuje udostępniane przez Google Chrome Extension API \texttt{chrome.webRequest} (\cite{webRequestAPI}), pozwalające na operację podmiany adresu zapytania zanim zostanie ono wysłane na serwer; dzięki temu możliwe są przekierowania  niewymagające modyfikacji DOM-u stron internetowych, uwzględniające także asynchroniczne zapytania AJAX.
 
 \begin{figure}[h]
 	\centering
-	\begin{subfigure}{0.4\textwidth}
+	\begin{subfigure}{1\textwidth}
 		\centering
-		\includegraphics[scale=0.6]{redir.png}
+		\includegraphics[scale=0.45]{no-redir.png}
 		\subcaption{\label{subfigure_a}}
-	\end{subfigure}
-	\begin{subfigure}{0.5\textwidth}
+    \end{subfigure}
+    \begin{subfigure}{1\textwidth}
 		\centering
-		\includegraphics[scale=0.6]{no-redir.png}
+		\includegraphics[scale=0.45]{redir.png}
 		\subcaption{\label{subfigure_b}}
 	\end{subfigure}
 	
-	\caption{Przykład zapytania, które zostało przekierowane przez wtyczkę -- 307 jest kodem przekierowania wewnętrznego}
+	\caption{Przykład zapytania bez przekierowania \protect\subref{subfigure_a} i zapytania, które zostało przechwycone przez wtyczkę \protect\subref{subfigure_b} -- kod HTTP 307 reprezentuje przekierowanie prowadzące do węzła dHTTP.}
 
 \end{figure}
 
-\subsection{Aplikacja}
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.6]{client-flow.pdf}
+    % \subcaption{\label{subfigure_a}}
 
+    \caption{Wizualizacja przepływu danych przeglądarki Chrome wyposażonej w dHTTP.}
+    \label{fig:client-flow}
+\end{figure}
 
-\subsection{Połączenie z węzłem}
-% TODO -- Narysuj superschemat, w którym reakcje na komunikaty są wynikiem REST API, podobnie z plikami; środek kwestia własna
+\newpage
+
 \subsection{Eksperymentalny pełny klient}
 
+Oryginalną ideą przyswiecającą projektowi dHTTP było udostępnienie klienta-wtyczki wyposażonego bezpośrednio w kompletny węzeł, z pominięcie pośredniego serwera node.js.
 
-
-
-%  TODO - cite 'http' client somewhere (over the rainbow)
+Ponieważ nie jest możliwym uruchomienie w rozszerzeniu oprogramowania serwerowego (jak \texttt{http} oferowany przez node.js), jak i tworzenie plików bezpośrednio w systemie plików użytkownika, przekierowania na adresy serwerowe nie mogłyby zostać obsłużone. Jedyną opcją pozostawało tworzenie ścieżki \texttt{data:}, co z kolei wymusza przekład danych do \texttt{base64}. Ponadto, aby wykonać tego typu zapytanie, konieczne jest sztuczne blokowanie wywołań JavaScriptowych w oczekiwaniu na zakończenie strumieni danych. API Chrome w obecnym kształcie uniemożliwia zatem realizację tego rozwiązania w sposób wydajny.
