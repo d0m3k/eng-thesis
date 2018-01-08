@@ -1,7 +1,7 @@
 \chapter{Wprowadzenie}
 \label{cha:wprowadzenie}
 
-Dzisiejsza informatyka jak nigdy stoi przed wyzwaniami związanymi z wydajnością, wymuszanymi poprzez miliony klientów z szerokopasmowym dostępem do sieci. Ich rozwiązywanie nie jest już możliwe przez wzmacnianie podzespołów pojedynczych komputerów -- wymaga odpowiedniego sposobu projektowania, który skupia się na możliwościach maksymalnego rozłożenia i łatwego skalowania obciążenia. Ta praca proponuje rozwiązanie, które wpisuje się w ten motyw i w przystępny klientom sposób może znacznie odciążyć rozwijające się części sieci web.
+Dzisiejsza informatyka jak nigdy wcześniej stoi przed wyzwaniami związanymi z wydajnością, wymuszanymi poprzez miliony klientów z szerokopasmowym dostępem do sieci. Ich rozwiązywanie nie jest już możliwe przez wzmacnianie podzespołów pojedynczych komputerów -- wymaga odpowiedniego sposobu projektowania, który skupia się na możliwościach maksymalnego rozłożenia i łatwego skalowania obciążenia. Ta praca proponuje rozwiązanie, które wpisuje się w ten motyw i w przystępny klientom sposób może znacznie odciążyć rozwijające się części sieci web.
 
 \section{Cele pracy}
 \label{sec:celePracy}
@@ -14,9 +14,9 @@ Celem tej pracy jest stworzenie protokołu i oprogramowania pozwalającego na ro
 
 Głównym założeniem projektu jest rozłożenie obciążenia stron, które nagle zyskują popularność -- często konieczna dla właścicieli takich stron jest inwestycja w szybsze łącza czy więcej sprzętu, wiążąca się ze sporymi kosztami. Kosztami które mogą zresztą nie znaleźć uzasadnienia -- dodatkowy sprzęt pomoże w chwilach szczytowego ruchu, będzie jednak przez większość czasu leżeć odłogiem, wciąż generując koszty łącz i prądu.
 
-Częściowym rozwiązaniem tego problemu są chmury i udostępniany przez nie {\em autoscaling} -- użytkownicy, zamiast utrzymywać własną infrastrukturę, mogą nie tylko zdać się na serwery zarządzane przez zewnętrzny podmiot, ale także wykorzystać mechanizmy automatycznego rozszerzania i zmniejszania ilości urządzeń czy wykorzystywanego łącza, w zależności od obciążenia całego klastra. To pozwala na drastyczną minimalizację kosztów i jest rozwiązaniem coraz chętniej stosowanym także przez podmioty o gigantycznym ruchu sieciowym, jak serwis streamingowy Netflix (\cite{AWSAs}).
+Częściowym rozwiązaniem tego problemu są rozwiązania w tzw. chmurze i udostępniany przez nie {\em autoscaling} -- użytkownicy, zamiast utrzymywać własną infrastrukturę, mogą nie tylko zdać się na serwery zarządzane przez zewnętrzny podmiot, ale także wykorzystać mechanizmy automatycznego rozszerzania i zmniejszania ilości urządzeń czy wykorzystywanego łącza, w zależności od obciążenia całego klastra. To pozwala na drastyczną minimalizację kosztów i jest rozwiązaniem coraz chętniej stosowanym także przez podmioty o gigantycznym ruchu sieciowym, jak serwis streamingowy Netflix \cite{AWSAs}.
 
-Wciąż jednak są to rozwiązania obciążające właściciela witryny, co może stanowić problem w przypadku projektów hobbystycznych czy krajów rozwijających się -- koszt autoscalingu w czasach szczytu może okazać się nieproporcjonalnie wysoki w stosunku do czasów spokojnego ruchu.
+Wciąż jednak są to rozwiązania obciążające właściciela witryny, co może stanowić problem w przypadku projektów hobbystycznych czy krajów rozwijających się -- koszt autoscalingu w czasie najwyższego obciążenia może okazać się nieproporcjonalnie wysoki w stosunku do czasów spokojnego ruchu.
 
 % poprzedni komentarz kończy się TU
 
