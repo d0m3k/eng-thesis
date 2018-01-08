@@ -123,10 +123,11 @@ Powyższy przykład, stanowiący część kodu dHTTP, pokazuje istotny koncept {
 
 Podkreślić należy również pozytywny wpływ strumieni na wydajność -- ta abstrakcja pozwala operować na plikach przy użyciu buforów w sposób niewidoczny: przykładowo, aby wysłać duży obrazek nie przechowując go w całości w pamięci, wystarczy utworzyć strumień pliku i przepotokować go do strumienia wyjściowego.
 
+\pagebreak
 \begin{lstlisting}[language=javascript]
     var fileStream =  fs.createReadStream(filePath);
     fileStream.pipe(connStream)
-    //kiedy strumień pliku się zakończy, nastąpi zamknięcie połączenia aby poinformować odbiorcę, że nic już na niego nie czeka
+    // kiedy strumień pliku się zakończy, nastąpi zamknięcie połączenia aby poinformować odbiorcę, że nic już na niego nie czeka
     fileStream.on('finish', ()=> connStream.close())
 \end{lstlisting}
 
