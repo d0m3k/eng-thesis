@@ -6,19 +6,16 @@ Dzisiejsza informatyka jak nigdy wcześniej stoi przed wyzwaniami związanymi z 
 \section{Cele pracy}
 \label{sec:celePracy}
 
-% TODO - tę sekcję prawdopodobnie trzeba przepisać, uwzględniając efekty pracy w dalszym ciągu tekstu + fakt że bardzo bardzo rozpisuję sie nad tym co zastępujemy
 
 Celem tej pracy jest stworzenie protokołu i oprogramowania pozwalającego na rozproszony i bezpieczny dostęp do współdzielonych zasobów, w warstwie użytkowej odpowiadającego obecnemu Hypertext Transfer Protocol (HTTP). W toku pracy, system określany będzie skrótem \textbf{dHTTP} -- distributed HTTP.
 
-% prawdopodobnie trzeba to wynieść do któregoś z kolejnych rozdziałów, bo już jest zbyt granuralne
 
 Głównym założeniem projektu jest rozłożenie obciążenia stron, które nagle zyskują popularność -- często konieczna dla właścicieli takich stron jest inwestycja w szybsze łącza czy więcej sprzętu, wiążąca się ze sporymi kosztami. Kosztami które mogą zresztą nie znaleźć uzasadnienia -- dodatkowy sprzęt pomoże w chwilach szczytowego ruchu, będzie jednak przez większość czasu leżeć odłogiem, wciąż generując koszty łącz i prądu.
 
 Częściowym rozwiązaniem tego problemu są rozwiązania w tzw. chmurze i udostępniany przez nie {\em autoscaling} -- użytkownicy, zamiast utrzymywać własną infrastrukturę, mogą nie tylko zdać się na serwery zarządzane przez zewnętrzny podmiot, ale także wykorzystać mechanizmy automatycznego rozszerzania i zmniejszania ilości urządzeń czy wykorzystywanego łącza, w zależności od obciążenia całego klastra. To pozwala na drastyczną minimalizację kosztów i jest rozwiązaniem coraz chętniej stosowanym także przez podmioty o gigantycznym ruchu sieciowym, jak serwis streamingowy Netflix \cite{AWSAs}.
 
-Wciąż jednak są to rozwiązania obciążające właściciela witryny, co może stanowić problem w przypadku projektów hobbystycznych czy krajów rozwijających się -- koszt autoscalingu w czasie najwyższego obciążenia może okazać się nieproporcjonalnie wysoki w stosunku do czasów spokojnego ruchu.
+Wciąż jednak są to rozwiązania obciążające właściciela witryny, co może stanowić problem w przypadku projektów hobbystycznych czy krajów rozwijających się -- koszt autoscalingu w czasie najwyższego obciążenia może okazać się nieproporcjonalnie wysoki w stosunku do standardowego ruchu.
 
-% poprzedni komentarz kończy się TU
 
 System zaprezentowany w poniższej pracy -- dHTTP -- ma posłużyć jako samoskalująca się, rozproszona alternatywa do tego podejścia. Bierze on pod uwagę optymalne rozłożenie danych, szybki i możliwie najmniej scentralizowany sposób współdzielenia informacji o stanie systemu ({\em kto jest online i może dać mi plik \texttt{logo.png} z hosta \texttt{example.com}?}) i aktualizacjach zawartości, oraz stronę kliencką, będącą w tym przypadku wtyczką do przeglądarki Google Chrome, nakładającą warstwę dHTTP na polecenia pobierania zasobów. Z punktu widzenia użytkownika system jest {\em przezroczysty}: zostanie  węzłem i klientem sieci dHTTP polega wyłącznie na instalacji wtyczki, działającej autonomicznie w tle. Oprócz aplikacji klienckiej, dHTTP udostępniony jest także w trybie {\em headless} -- węzeł może zostać częścią klastra w sposób automatyczny, bez użycia przeglądarki.
 

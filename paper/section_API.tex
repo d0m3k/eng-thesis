@@ -1,9 +1,9 @@
 \section{API}
 \label{sec:api}
 
-W tej sekcji szczegółowo opisane zostały udostępnione przez \texttt{dhttp.js} funkcje i mechanizmy związane ze strukturami i przepływami danych pomiędzy węzłami. Ogólny przepływ informacji systemu zawiera się w do podsekcji \ref{sub:flows}, opisującej przepływy danych, oraz podsekcji \ref{sub:nodeCycle}, opisującej cykl życia węzła.
+W tej sekcji szczegółowo opisane zostały udostępnione przez \texttt{dhttp.js} funkcje i mechanizmy związane ze strukturami i przepływami danych pomiędzy węzłami. Ogólny przepływ informacji systemu zawiera się w podsekcji \ref{sec:transportAlgorithm}, opisującej cykl życia węzła.
 
-Podstawowym założeniem jest istnienie singletona \texttt{dhttpClient}, który przy rozruchu aplikacji inicjalizuje węzeł sieci. Wszelkie odwołania do działania węzła powinny polegać na rejestrowaniu wydarzeń i wywoływaniu funkcji globalnego obiektu \texttt{dhttpClient}.
+Podstawowym założeniem jest istnienie singletona\footnote{Możliwość tworzenia obiektu ograniczona jest do pojedynczej, globalnie dostępnej instancji.} \texttt{dhttpClient}, który przy rozruchu aplikacji inicjalizuje węzeł sieci. Wszelkie odwołania do działania węzła powinny polegać na rejestrowaniu wydarzeń i wywoływaniu funkcji globalnego obiektu \texttt{dhttpClient}.
 
 \subsection{Struktury danych}
 W celu poprawy wydajności i uproszczenia przepływów w aplikacji, dHTTP oferuje kilka struktur informujących o dostępności danych.
@@ -87,7 +87,7 @@ stats: {
 \begin{lstlisting}[language=javascript]
     node: Node {protocols: {...}, peerInfo: PeerInfo, ...}
 \end{lstlisting}
-\texttt{node} jest obiektem pozwalającym na bezpośredni dostęp do reprezentacji danego węzła w warstwie \texttt{js-libp2p}. Pozwala na wykonywanie połączeń i propagację danych z poziomu innych funkcji dHTTP. Szczegóły zawarte w dokumentacji projektu (\cite{libp2pReadme}).
+\texttt{node} jest obiektem pozwalającym na bezpośredni dostęp do reprezentacji danego węzła w warstwie \texttt{js-libp2p}. Pozwala na wykonywanie połączeń i propagację danych z poziomu innych funkcji dHTTP. Szczegóły zawarte w dokumentacji projektu \cite{libp2pReadme}.
 
 % 
 
@@ -185,6 +185,7 @@ Mapa \texttt{RequestURL} obsługiwanych przez dany węzeł na ich \texttt{Popula
 \end{lstlisting}
 \texttt{addFile} pozwala poinformować sieć o pojawieniu się nowego pliku i o tym, że jest on obsługiwany przez nas, z danym indeksem popularności. Sieć może wykorzystać tę wiedzę aby zacząć przekierowywać użytkowników na dany plik, lub pobierać go w celach udostępniania.
 
+\newpage
 \textbf{Parametry:}
 \begin{itemize}
     \item \textbf{\texttt{RequestURL}} -- ścieżka pliku
@@ -259,7 +260,7 @@ Ta sekcja zawiera funkcje o wspólnej charakterystyce -- są częścią {\em rea
 
 % 
 
-\subsubsection{\texttt{acceptIntroduction/2}}
+\subsubsection{\texttt{acceptIntroduction/1}}
 \begin{lstlisting}[language=javascript]
     acceptIntroduction: function(ResponseData) -> ()
 \end{lstlisting}
@@ -272,7 +273,7 @@ Ta sekcja zawiera funkcje o wspólnej charakterystyce -- są częścią {\em rea
 
 % 
 
-\subsubsection{\texttt{attachNode/2}}
+\subsubsection{\texttt{attachNode/1}}
 \begin{lstlisting}[language=javascript]
     attachNode: function (PeerInfo) -> ()
 \end{lstlisting}
@@ -284,8 +285,8 @@ Ta sekcja zawiera funkcje o wspólnej charakterystyce -- są częścią {\em rea
 \end{itemize}
 
 % 
-
-\subsubsection{\texttt{detachNode/2}}
+\newpage
+\subsubsection{\texttt{detachNode/1}}
 \begin{lstlisting}[language=javascript]
     detachNode: function (PeerInfo) -> ()
 \end{lstlisting}
@@ -297,9 +298,6 @@ Ta sekcja zawiera funkcje o wspólnej charakterystyce -- są częścią {\em rea
 \end{itemize}
 
 % 
-
-
-
 
 % middle interfaces and stuff: attachNode, detachNode, storage.storeFile, download
 % to może nie być aż tak strict; może lub musi jednak odnosić się do istniejących funkcji
@@ -347,6 +345,7 @@ Komunikat informujący o plikach dostępnych w danym węźle. Pozwala na uzupeł
 
 Komunikat pytający, czy dany węzeł posiada plik lub zna węzeł który może ten plik posiadać.
 
+\pagebreak
 \textbf{Oczekiwana odpowiedź:}
 \begin{lstlisting}[language=javascript]
     {
@@ -385,6 +384,3 @@ Komunikat informujący o pojawieniu się nowego pliku; może być używany wielo
 \end{lstlisting}
 
 Komunikat informujący o usunięciu pliku z danego węzła, propagowany w całe sieci w celu aktualizacji tablicy plików.
-
-
-% TODO - rysunek przedstawiający całe API -- możliwe, że posłuży za niego opis w kolejnej sekcji.

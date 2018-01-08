@@ -11,7 +11,7 @@ W ramach testu systemu skonstruowano stronę testową, która składa się z pi�
     \label{fig:test-page}
 \end{figure}
 
-W celu oceny wydajności systemu, uruchomiony zostanie serwer \texttt{http} w środowisku node.js, na instancji EC2 znajdującej się w obszarze dostępności US East (Ohio) Amazon Web Services. Przy wykorzystaniu pakietu \texttt{throttle} (\cite{npmThrottle}) możliwe jest symulowanie ograniczonej przepustowości zarówno serwera końcowego, jak i pojedynczych węzłów sieci dHTTP.
+W celu oceny wydajności systemu, uruchomiony zostanie serwer \texttt{http} w środowisku node.js, na instancji EC2 znajdującej się w obszarze dostępności US East (Ohio) Amazon Web Services. Przy wykorzystaniu pakietu \texttt{throttle} \cite{npmThrottle} możliwe jest symulowanie ograniczonej przepustowości zarówno serwera końcowego, jak i pojedynczych węzłów sieci dHTTP.
 
 \section{Rezultaty testów}
 \begin{table}[H]
@@ -34,4 +34,4 @@ W celu oceny wydajności systemu, uruchomiony zostanie serwer \texttt{http} w ś
 
 Przy pełnej przepustowości sieci efekt działania dHTTP jest niemal niezauważalny (co wynika z nikłego obciążenia węzłów posiadających upload na średnim poziomie 88 Mbps według SpeedTest.net); warto jednak zwrócić uwagę na znaczną poprawę przepustowości przy ograniczonej szybkości oryginalnego serwera -- w tym przypadku, zastosowanie dHTTP zaowocowało przyrostem szybkości na poziomie 442\% względem pobierania bez wsparcia pięciu węzłów sąsiedzkich.
 
-Warto zwrócić również uwagę na perspektywę optymalizacji systemu -- w przypadku braku ograniczeń łącza serwera, ale pięciu węzłów o przepustowości 1Mbps, szybkość transferu jest znacznie niższa, niż gdyby użytkownik użył oryginalnego serwera. Uwzględnienie metryki średniej szybkości łącza węzłów dHTTP mogłoby pozytywnie wpływać na klientów wyposażonych w szerokopasmowe połączenie. 
+Warto zwrócić również uwagę na perspektywę optymalizacji systemu -- w przypadku braku ograniczeń łącza serwera, ale pięciu węzłów o przepustowości 1 Mbps, szybkość transferu jest znacznie niższa, niż gdyby użytkownik użył oryginalnego serwera. Uwzględnienie metryki średniej szybkości łącza węzłów dHTTP mogłoby pozytywnie wpływać na klientów wyposażonych w szerokopasmowe połączenie. 
