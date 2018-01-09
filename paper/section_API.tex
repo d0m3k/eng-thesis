@@ -129,7 +129,7 @@ storage: {
     \item \textbf{\texttt{quotas}} -- obiekt który zawiera w sobie konfigurację ograniczeń pamięci. Dla wartości \texttt{0} nie istnieją żadne ograniczenia; wartość \texttt{-1} oznacza zakaz korzystania z danego rodzaju pamięci.
     \item \textbf{\texttt{RAMFiles}} -- zbiór wszystkich plików przechowywanych w pamięci RAM.
     \subitem  \textbf{\texttt{value}} -- plik trzymany w formacie binarnym, gotowy do strumieniowego przesłania użytkownikowi końcowemu.
-    \item \textbf{\texttt{RAMFiles}} -- zbiór wszystkich plików przechowywanych w systemie plików użytkownika.
+    \item \textbf{\texttt{driveFiles}} -- zbiór wszystkich plików przechowywanych w systemie plików użytkownika.
     \subitem  \textbf{\texttt{value}} -- względna ścieżka do pliku, który zawiera dany zasób.
 \end{itemize}
 
@@ -383,4 +383,4 @@ Komunikat informujący o pojawieniu się nowego pliku; może być używany wielo
     }
 \end{lstlisting}
 
-Komunikat informujący o usunięciu pliku z danego węzła, propagowany w całe sieci w celu aktualizacji tablicy plików.
+Komunikat informujący o usunięciu pliku z danego węzła, propagowany w całej sieci w celu aktualizacji tablicy plików.
