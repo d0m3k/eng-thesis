@@ -114,7 +114,7 @@ storage: {
     driveFiles: {
         files: {
             "http://example.com/onDrive.png": { // RequestURL
-                path: "/files/http://example.com/onDrive.png"
+                path: "/files/http:++example.com+onDrive.png"
             },
             "http://example.com/onDrive2.png": { ... },
             ...
@@ -229,7 +229,7 @@ Mapa \texttt{RequestURL} obsługiwanych przez dany węzeł na ich \texttt{Popula
 \begin{lstlisting}[language=javascript]
     propagate: function(Data, (Data) -> ()) -> ()
 \end{lstlisting}
-\texttt{propagate} wysyła dane przy użyciu metaprotokołu do wszystkich dostępnych węzłów. \ref{{sub:metaprotocolMessages}} zawiera szczegóły obsługiwanych komunikatów.
+\texttt{propagate} wysyła dane przy użyciu metaprotokołu do wszystkich dostępnych węzłów. Sekcja \ref{sub:metaprotocolMessages} zawiera szczegóły obsługiwanych komunikatów.
 
 \textbf{Parametry:}
 \begin{itemize}
@@ -312,7 +312,7 @@ Metaprotokół dHTTP służy prostej propagacji danych na temat węzłów i plik
 \begin{lstlisting}[language=javascript]
     {
         type: "echo",
-        % peerId: dhttpClient.node.peerInfo.id.toB58String(), // ID pytającego
+        peerId: dhttpClient.node.peerInfo.id.toB58String(), // ID pytającego
         text: "Hello, node."
     }
 \end{lstlisting}
@@ -339,7 +339,7 @@ Komunikat informujący o plikach dostępnych w danym węźle. Pozwala na uzupeł
     {
         type: "hasFile",
         peerId: dhttpClient.node.peerInfo.id.toB58String(),
-        files: RequestURL
+        file: RequestURL
     }
 \end{lstlisting}
 
@@ -364,7 +364,7 @@ Komunikat pytający, czy dany węzeł posiada plik lub zna węzeł który może 
     {
         type: "addFile",
         peerId: dhttpClient.node.peerInfo.id.toB58String(),
-        files: RequestURL,
+        file: RequestURL,
         popularityIndex: PopularityIndex
     }
 \end{lstlisting}
@@ -379,7 +379,7 @@ Komunikat informujący o pojawieniu się nowego pliku; może być używany wielo
     {
         type: "removeFile",
         peerId: dhttpClient.node.peerInfo.id.toB58String(),
-        files: RequestURL
+        file: RequestURL
     }
 \end{lstlisting}
 
