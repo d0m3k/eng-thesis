@@ -1,0 +1,78 @@
+<html>
+    <head>
+        <title>Strona testowa wydajności systemu dHTTP.</title>
+        <meta charset="utf-8">
+
+        <style>
+            body {
+                font-family: sans-serif;
+                text-align: center;
+            }
+            
+            .me {
+            position:absolute;
+            top:50%;
+            left:50%;
+            padding:0;
+            -ms-transform: translateX(-50%) translateY(-50%);
+            -webkit-transform: translate(-50%,-50%);
+            transform: translate(-50%,-50%);
+            }
+            
+            .image-of-me {
+                height: 16rem;
+                border-radius: 50%;
+            }
+            
+            h1{
+            margin-bottom: 0.5rem;
+            font-size: 3em;
+            }
+            
+            a {
+                color: #CFD8DC;
+                text-decoration: none;
+                border-bottom: 2px dotted #CFD8DC;
+            }
+            
+            p {
+            margin: 0 0 2rem 0;
+            font-size: 1.2rem;
+            }
+            
+            ul{
+            padding:0;
+            }
+            
+            .links li
+            {
+                display: inline;
+                list-style-type: none;
+                padding: 0 0.5rem 0 0.5rem;
+                font-size: 1rem;
+            }
+
+            .benchmark {
+                height: 250px;
+            }
+        </style>
+    </head>
+
+    <body>
+        <h1>Strona testowa wydajności dHTTP.</h1>
+        <p>Źródła obrazów:
+            <a href="https://commons.wikimedia.org/wiki/File:R%C3%A2%C5%9Fnov_Citadel_(Rosenauer_Burg)_01.jpg#/media/File:R%C3%A2%C5%9Fnov_Citadel_(Rosenauer_Burg)_01.jpg">1</a>
+            <a href="https://commons.wikimedia.org/wiki/File:EW58-002,_Warszawa,_1975.jpg#/media/File:EW58-002,_Warszawa,_1975.jpg">2</a>
+            <a href="https://pl.wikipedia.org/wiki/Wikipedia:Ilustracja_na_medal#/media/File:2014_Otmuch%C3%B3w,_rynek.jpg">3</a>
+            <a href="https://pl.wikipedia.org/wiki/Wikipedia:Ilustracja_na_medal#/media/File:2016_Singapur,_Jurong_Bird_Park_(175).jpg">4</a>
+            <a href="https://pl.wikipedia.org/wiki/Plik:Osmium_crystals.jpg">5</a>
+        </p>
+
+        <img class="benchmark" src="citadel.jpg">
+        <img class="benchmark" src="train1.jpg">
+        <img class="benchmark" src="otmuchow.jpg">
+        <img class="benchmark" src="singapur.jpg">
+        <img class="benchmark" src="osm.jpg">
+
+    </body>
+</html>

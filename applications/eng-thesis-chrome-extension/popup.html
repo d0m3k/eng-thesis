@@ -1,0 +1,98 @@
+<html>
+    <head>
+        <style>
+            #body{
+                width: 500px;
+            }
+
+            h1, em, p {
+                margin-bottom: 0;
+            }
+
+            #id {
+                font-family: Courier New, Courier, monospace
+            }
+
+            .two-column {
+                column-count: 2;
+            }
+            
+            ul {
+                margin: 0;
+            }
+
+            li {
+                list-style-type: none;
+                break-inside: avoid-column;
+            }
+
+            .full-width {
+                width: 100%
+            }
+        </style>
+    </head>
+    <body>
+        <div id="body">
+            <h1> dHTTP v0.1</h1>
+            <p id="id" title="Cryptographic hash assigned to your node. Useful for debugging purposes." >ID: <span id="nodeID">nodeID!</span></p>
+            <p>Running for <span id="timeCount">0</span> seconds.</p>
+            <div>
+                <h2>Stats</h2>
+                <div class="two-column">
+                    <div>
+                        <ul>
+                             <li title="Downloaded data">DL: <span id="downloadedFiles"></span> files</li>
+                             <li title="Uploaded data">UL: <span id="uploadedFiles"></span> files</li>
+                        </ul>
+                    </div>
+
+                    <div>
+                            <ul>
+                                <li title="Number of nodes that we are aware of existing in network; number in parentheses represent headless nodes.">Peers: <span id="peers">0</span></li>
+                                <li title="Number of nodes we keep connection on currently, for sake of performance.">Connected: <span id="connected">0</span></li>
+                            </ul>
+                    </div>    
+                </div>
+
+                <h2>Options</h2>
+                <div class="two-column">
+                    <label>
+                        Node HTTP address <input class="full-width" id="nodeAddress">
+                        <button id="change">Change node/filter</button>
+                    </label><br/>
+                    <label>
+                        Comma-separated filter URLs (<a href="https://developer.chrome.com/extensions/webRequest">details</a>)<br/> <input class="full-width" id="filterString">
+                    </label><br/>
+                    
+                </div>
+                <!-- <h3>Data propagation mode</h3>
+                    <input type="radio" name="propagation" value="real-time" checked="checked" title="This option allows other users to use your resources for as long as you have pages with them open in your browser. Recommended for small RAM or drive configurations. It provides network only in case you use the same pages.">Real-time</input>
+                    <input type="radio" name="propagation" value="popularity" title="This option considers data held by network and tries to probivide as much data as possible for most popular pages, counting page hits.">Popularity</input>
+                    <input type="radio" name="propagation" value="popularity" title="This option considers data held by network and tries to probivide as much data as possible for pages considered loaded because of high latencies; it should provide network with static resources of said pages faster.">Latency</input>
+                    <input type="radio" name="propagation" value="hybrid" title="This option uses metric that is hybrid between popularity and latency approach, adapting to spikes in popularity.">Hybrid</input>
+                    <input type="radio" name="propagation" value="yamb" title="You-asked-me-based. This option tries to find file in network or web server when asked for resource, and if it does, adds it to local">YAMB</input> -->
+                <!-- <h3>Persistence options</h3>
+                    <input type="radio" name="persistence" value="ram" title="This option holds data in sole RAM, which is insanely fast, but may quickly fill the memory and affect performance.">RAM</input>
+                    <input type="radio" name="persistence" value="drive" title="This option holds data on drive, asking for it only in case necessary. More memory thrifty, but slower.">Drive</input>
+                    <input type="radio" name="persistence" value="hybrid" checked="checked" title="This option holds data on drive, asking for it only in case necessary, and tries to keep top-used files in memory.">Hybrid</input>
+                    <div class="two-column">
+                        <label>
+                            <input type="number" id="ramStorage"> MB RAM storage
+                        </label><br/>
+                        <label>
+                            <input type="number" id="driveStorage"> MB drive storage
+                        </label><br/>
+                        <label>
+                            <input type="number" id="filesHeld"> files
+                        </label><br/>
+                        <label title="Number of connections you accept. May be useful in case of limited networks to keep it low.">
+                                <input type="number" id="connections"> connections
+                        </label>
+                    </div> -->
+            </div>
+            <em>Hover over fields & controlls to see details</em>
+        </div>
+        <script src="jquery-3.2.1.min.js"></script>
+        <script src="popup.js"></script>
+    </body>
+</html>
