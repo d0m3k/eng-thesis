@@ -1,0 +1,34 @@
+{
+  "name": "dhttp-node",
+  "version": "0.1.0",
+  "description": "dHTTP node that allows you to seamlessly share files.",
+  "main": "src/index.js",
+  "scripts": {
+    "bundle": "browserify src/index.js > public/bundle.js",
+    "serve": "static public -p 9090 -H '{\"Cache-Control\": \"no-cache, must-revalidate\"}'",
+    "start": "cd src && node index.js"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "browserify": "^14.5.0",
+    "concat-stream": "^1.6.0",
+    "detect-dom-ready": "^1.0.2",
+    "node-static": "^0.7.10"
+  },
+  "dependencies": {
+    "detect-dom-ready": "^1.0.2",
+    "wrtc": "^0.0.65",
+    "libp2p": "^0.13.0",
+    "libp2p-multiplex": "^0.5.0",
+    "libp2p-railing": "^0.7.1",
+    "libp2p-secio": "^0.8.1",
+    "libp2p-spdy": "^0.11.0",
+    "libp2p-webrtc-star": "^0.13.2",
+    "libp2p-websockets": "^0.10.4",
+    "libp2p-kad-dht": "^0.6.0",
+    "peer-info": "^0.11.0",
+    "request": "^2.83.0",
+    "blob-stream": "^0.1.3",
+    "throttle": "^1.0.3"
+  }
+}
