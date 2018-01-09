@@ -28,11 +28,11 @@ Wymogiem dla projektu, koniecznym z racji potrzeby prostej automatyzacji rozrost
 W celu uniknięcia niejednoznaczności w dalszym toku pracy, zdefiniowane zostaną następujące pojęcia:
 
 \begin{itemize}
-    \item \textbf{węzeł} -- pojedynczy, autonomiczny element systemu, który wykorzystuje komunikację sieciową w celu rozgłaszania i pobierania danych;
-    \item \textbf{klient} -- węzeł, który pobiera dane w celach użytkowych, zaimplementowany w wersji dedykowanej użytkownikowi końcowemu;
-    \item \textbf{klaster} -- zbiór węzłów, który posiada informacje i ścieżki komunikacyjne pozwalające efektywnie na wymianę informacji pomiędzy każdym z nich;
-    \item \textbf{metadane klastra} -- ustrukturyzowane informacje wymieniane pomiędzy węzłami w celu ustalenia stanu i optymalizacji działania klastra;
-    \item \textbf{metadane pliku} -- ustrukturyzowane informacje wymieniane między węzłami w celu propagacji i umożliwienia wymiany faktycznych danych plikowych;
+    \item \textbf{węzeł} -- pojedynczy, autonomiczny element systemu, który wykorzystuje komunikację sieciową w celu rozgłaszania i pobierania danych.
+    \item \textbf{klient} -- węzeł, który pobiera dane w celach użytkowych, zaimplementowany w wersji dedykowanej użytkownikowi końcowemu.
+    \item \textbf{klaster} -- zbiór węzłów, który posiada informacje i ścieżki komunikacyjne pozwalające efektywnie na wymianę informacji pomiędzy każdym z nich.
+    \item \textbf{metadane klastra} -- ustrukturyzowane informacje wymieniane pomiędzy węzłami w celu ustalenia stanu i optymalizacji działania klastra.
+    \item \textbf{metadane pliku} -- ustrukturyzowane informacje wymieniane między węzłami w celu propagacji i umożliwienia wymiany faktycznych danych plikowych.
 \end{itemize}
 
 
@@ -213,14 +213,14 @@ Projekt, udostępniony jako \texttt{dhttp-node}, posiada następującą struktur
 \end{lstlisting}
 
 \begin{enumerate}[noitemsep]
-    \item definicja zależności, sposobu budowania i uruchamiania projektu w środowisku node.js;
-    \item generowany skrypt, akceptowany przez Google Chrome, pozwalający uruchomić dHTTP w przeglądarce;
-    \item plik definiujący moduły libp2p użyte dla węzła;
-    \item skrypt konfigurujący \texttt{js-libp2p-webrtc-star};
-    \item serce dHTTP -- skrypt definiujący funkcjonalności opisane w rozdziale \ref{sec:api};
-    \item domyślny folder przechowywania plików w przetwarzaniu dyskowym;
-    \item główny plik programu; importuje niezbędne klasy i uruchamia serwer http;
-    \item skrypt rejestrujący wydarzenia niezbędne do działania dHTTP z perspektywy \texttt{js-libp2p}.
+    \item Definicja zależności, sposobu budowania i uruchamiania projektu w środowisku node.js.
+    \item Generowany skrypt, akceptowany przez Google Chrome, pozwalający uruchomić dHTTP w przeglądarce.
+    \item Plik definiujący moduły libp2p użyte dla węzła.
+    \item Skrypt konfigurujący \texttt{js-libp2p-webrtc-star}.
+    \item Serce dHTTP -- skrypt definiujący funkcjonalności opisane w rozdziale \ref{sec:api}.
+    \item Domyślny folder przechowywania plików w przetwarzaniu dyskowym.
+    \item Główny plik programu; importuje niezbędne klasy i uruchamia serwer http.
+    \item Skrypt rejestrujący wydarzenia niezbędne do działania dHTTP z perspektywy \texttt{js-libp2p}.
 \end{enumerate}
 
 \subsection{Cykl życia węzła}

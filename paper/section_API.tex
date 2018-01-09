@@ -12,7 +12,7 @@ Typy struktur jak i funkcje oferowane przez \texttt{js-libp2p}, do których odno
 
 \subsubsection{Struktury podstawowe}
 \begin{itemize}
-    \item \textbf{\texttt{PeerId}} -- \texttt{String} zawierający ID węzła sieci, uzyskane dzięki zawołaniu \texttt{PeerInfo.id.toB58String()}
+    \item \textbf{\texttt{PeerId}} -- \texttt{String} zawierający ID węzła sieci, uzyskane dzięki zawołaniu \texttt{PeerInfo.id.toB58String()}.
     \item \textbf{\texttt{RequestURL}} -- \texttt{String} zawierający ścieżkę zapytania klienckiego. Jeśli klient odpyta nasz serwer na adresie \texttt{http://localhost:34887/http://example.com/script.js}, instancja \texttt{RequestURL} zawierać będzie \texttt{http://example.com/script.js}.
     \item \textbf{\texttt{popularityIndex}} -- \texttt{Integer} określający popularność danego pliku z perspektywy posiadającego go węzła.
     \item \textbf{\texttt{Data}} -- serializowalny obiekt zawierający dane przesyłane w ramach metaprotokołu, zgodne z formatami zdefiniowanymi w \ref{sub:metaprotocolMessages}.
@@ -172,7 +172,7 @@ Mapa \texttt{RequestURL} obsługiwanych przez dany węzeł na ich \texttt{Popula
 
 \textbf{Parametry:}
 \begin{itemize}
-    \item \textbf{\texttt{PeerInfo}} -- obiekt \texttt{PeerInfo} węzła do którego ma zostać wysłana wiadomość
+    \item \textbf{\texttt{PeerInfo}} -- obiekt \texttt{PeerInfo} węzła do którego ma zostać wysłana wiadomość.
     \item \textbf{\texttt{Data}} -- serializowalny obiekt zawierający wysyłane dane; \texttt{ResponseData} jest tym samym typem, wydzielonym w celu większej czytelności -- zaznaczenia, że reprezentuje dane otrzymane.
     \item \textbf{\texttt{(ResponseData) -> ()}} -- callback, wołany dla odpowiedzi otrzymywanych od serwera. Otrzymuje jako parametr zdeserializowany obiekt odpowiedzi.
 \end{itemize}
@@ -188,8 +188,8 @@ Mapa \texttt{RequestURL} obsługiwanych przez dany węzeł na ich \texttt{Popula
 \newpage
 \textbf{Parametry:}
 \begin{itemize}
-    \item \textbf{\texttt{RequestURL}} -- ścieżka pliku
-    \item \textbf{\texttt{popularityIndex}} -- patrz: \texttt{filesInNetwork}
+    \item \textbf{\texttt{RequestURL}} -- ścieżka pliku.
+    \item \textbf{\texttt{popularityIndex}} -- patrz: \texttt{filesInNetwork}.
     \item \textbf{\texttt{(ResponseData) -> ()}} -- callback, wołany dla odpowiedzi otrzymywanych od serwera; pozwala reagować w przypadkach wystąpienia nieoczekiwanych błędów.
 \end{itemize}
 
@@ -203,7 +203,7 @@ Mapa \texttt{RequestURL} obsługiwanych przez dany węzeł na ich \texttt{Popula
 
 \textbf{Parametry:}
 \begin{itemize}
-    \item \textbf{\texttt{RequestURL}} -- ścieżka pliku
+    \item \textbf{\texttt{RequestURL}} -- ścieżka pliku.
     \item \textbf{\texttt{(ResponseData) -> ()}} -- callback, wołany dla odpowiedzi otrzymywanych od serwera; pozwala reagować w przypadkach wystąpienia nieoczekiwanych błędów.
 \end{itemize}
 
@@ -217,7 +217,7 @@ Mapa \texttt{RequestURL} obsługiwanych przez dany węzeł na ich \texttt{Popula
 
 \textbf{Parametry:}
 \begin{itemize}
-    \item \textbf{\texttt{RequestURL}} -- ścieżka pliku
+    \item \textbf{\texttt{RequestURL}} -- ścieżka pliku.
     \item \textbf{\texttt{Writable}} -- strumień, do którego ma zostać wysłany poszukiwany plik.
     \item \textbf{\texttt{PeerInfo}} -- obiekt reprezentujący węzeł, z którego pobieramy plik.
 \end{itemize}

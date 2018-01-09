@@ -11,7 +11,7 @@ Aplikacja reprezentująca pojedynczy węzeł sieci dHTTP. Automatycznie wykrywa 
 └── src
     ├── browser-bundle.js       // plik definiujący moduły libp2p użyte dla węzła
     ├── create-node.js          // skrypt konfigurujący js-libp2p-webrtc-star
-    ├── dhttp.js
+    ├── dhttp.js                // serce dHTTP -- implementacja protokołu
     ├── files                   // utrzymywane przez węzeł pliki
     │   ├── http:++aws.dom3k.pl:8080+citadel.jpg
     ...
