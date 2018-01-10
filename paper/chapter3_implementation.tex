@@ -235,7 +235,7 @@ W sekcji \ref{sub:metaprotocolMessages} opisano funkcje i komunikaty dostępne w
 
     \item Jeśli otrzymasz informacje o innych węzłach, utwórz z nimi połączenie i wymień się metadanymi. 
 
-    \item Utrzymując otwarte połączenia z węzłami i uruchomiony serwer HTTP, odpowiadaj na zapytania protokołów \texttt{/dhttp/data/0.1} oraz \texttt{/dhttp/meta/0.1} i propaguj informacje zmianach zgodnie z \ref{sec:events}. \\ \parbox{\linewidth}{\centering \includegraphics[scale=0.5]{communication-flow.pdf}\captionof{figure}{Wizualizacja wirtualnych połączeń między węzłami i interakcji z klientem przy użyciu API HTTP.}}
+    \item Utrzymując otwarte połączenia z węzłami i uruchomiony serwer HTTP, odpowiadaj na zapytania protokołów \texttt{/dhttp/data/0.1} oraz \texttt{/dhttp/meta/0.1} i propaguj informacje o zmianach zgodnie z \ref{sec:events}. \\ \parbox{\linewidth}{\centering \includegraphics[scale=0.5]{communication-flow.pdf}\captionof{figure}{Wizualizacja wirtualnych połączeń między węzłami i interakcji z klientem przy użyciu API HTTP.}}
 \end{enumerate}
 
 
@@ -255,7 +255,7 @@ Zaletą jest małe obciążenie pamięciowe dla zadanego węzła i brak specjaln
 Wadą -- potencjalny mały wpływ danego klienta na propagację danych w sieci, zakładając częste zmienianie wyświetlanych stron i zamykanie kart.
 
 \subsubsection{Popularność}
-To rozwiązanie polegało na serwowaniu zasobów pobranych na podstawie {\em popularity index} zawartego w sieci.
+To rozwiązanie polega na serwowaniu zasobów pobranych na podstawie {\em popularity index} zawartego w sieci.
 
 Sieć propagowałaby informacje o popularności danych stron, a pojedyncze węzły na podstawie tych informacji podejmowałyby decyzje o priorytetyzacji pobierania konkretnych plików.
 
